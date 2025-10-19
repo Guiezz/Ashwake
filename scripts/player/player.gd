@@ -5,11 +5,12 @@ extends CharacterBody2D
 @export var forca_do_pulo := -400.0
 @export var gravidade := 1200.0
 @export var desaceleracao := 1000.0
+@export var gravidade_ataque_aereo_mult := 0.2
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
 @export var velocidade_deslizando := 40.0
-@export var forca_pulo_neutro_x := 50.0 # Pequeno impulso horizontal para o pulo neutro
+@export var forca_pulo_neutro_x := 50.0
 
 var esta_na_parede := false
 var pulou_da_parede_neste_quadro := false
@@ -23,6 +24,7 @@ var direcao_dash := Vector2.ZERO
 
 # --- ATAQUE ---
 var esta_atacando := false
+var current_attack_animation := ""
 
 # --- REFERÊNCIAS DE NÓS ---
 @onready var timer_dash := $DashTimer
@@ -30,6 +32,10 @@ var esta_atacando := false
 @onready var hitbox := $Hitbox
 @onready var attack_hitbox_timer := $AttackHitboxTimer
 @onready var attack_duration_timer := $AttackDurationTimer
+
+# --- REFERÊNCIAS DAS HITBOX SHAPES ---
+@onready var hitbox_ground_shape := $Hitbox/GroundShape
+@onready var hitbox_air_shape := $Hitbox/AirShape 
 
 # --- PULO DUPLO ---
 var saltos_restantes := 1
@@ -40,45 +46,61 @@ func _physics_process(delta: float) -> void:
 	var direcao_input := Input.get_axis("mover_esquerda", "mover_direita")
 
 	# --- LÓGICA DE ATAQUE (Prioridade 1) ---
-	# (MOVIDO PARA CIMA PARA TRAVAR A FÍSICA)
-	
-	# 1. Verifica se o jogador quer atacar
 	if Input.is_action_just_pressed("atacar") and not esta_atacando and not esta_na_parede and not esta_dando_dash:
+		
+		esta_atacando = true
+		# velocity = Vector2.ZERO <-- LINHA REMOVIDA
+		
+		# Garante que ambas as hitboxes comecem desligadas
+		hitbox_ground_shape.disabled = true
+		hitbox_air_shape.disabled = true
+
+		# Decide qual animação usar
 		if is_on_floor():
-			esta_atacando = true
-			velocity = Vector2.ZERO # Trava o jogador no lugar
+			current_attack_animation = "attack01"
+		else:
+			current_attack_animation = "attack_air"
 
-			# Pega a duração da animação de ataque
-			var frame_count = animacao.sprite_frames.get_frame_count("attack01")
-			var speed = animacao.sprite_frames.get_animation_speed("attack01")
-			var duracao_ataque = frame_count / speed
+		# Calcula a duração do ataque
+		var frame_count = animacao.sprite_frames.get_frame_count(current_attack_animation)
+		var speed = animacao.sprite_frames.get_animation_speed(current_attack_animation)
+		var duracao_ataque = frame_count / speed
 
-			# Inicia o timer de DURAÇÃO TOTAL do ataque
-			attack_duration_timer.start(duracao_ataque)
+		attack_duration_timer.start(duracao_ataque)
+		attack_hitbox_timer.start(0.1) 
 
-			# Inicia o timer da HITBOX (quando o golpe acerta)
-			# !! AJUSTE ESSE NÚMERO (0.1) !! 
-			# Deve ser o tempo (em segundos) até o frame do golpe
-			attack_hitbox_timer.start(0.1)
-
-	# 2. Se estiver atacando, trava todo o resto
+	# Se estiver atacando, força a animação, mas NÃO PARA a física
 	if esta_atacando:
-		atualizar_animacoes(0.0) # Força a atualização da animação
-		return # Pula o resto do _physics_process (gravidade, movimento, etc.)
+		atualizar_animacoes(0.0) 
+		# return <-- LINHA REMOVIDA
 
 	# --- FIM DA LÓGICA DE ATAQUE ---
 
-
-	# --- GRAVIDADE ---
+	# --- GRAVIDADE (MODIFICADA) ---
 	if not is_on_floor() and not esta_dando_dash:
-		velocity.y += gravidade * delta
+		# Se estiver atacando no ar, aplica gravidade reduzida
+		if esta_atacando:
+			velocity.y += (gravidade * gravidade_ataque_aereo_mult) * delta
+		else:
+			# Gravidade normal
+			velocity.y += gravidade * delta
 
-	# --- MOVIMENTO HORIZONTAL ---
+	# --- MOVIMENTO HORIZONTAL (MODIFICADO) ---
 	if not esta_dando_dash and not pulou_da_parede_neste_quadro:
-		velocity.x = move_toward(velocity.x, direcao_input * velocidade, desaceleracao * delta)
+		
+		# Se estiver atacando (no ar ou chão), perde o controle horizontal
+		if esta_atacando and not is_on_floor():
+			# No ar: O jogador não controla, apenas desacelera lentamente
+			# (Mantém um pouco do ímpeto do pulo)
+			velocity.x = move_toward(velocity.x, 0.0, (desaceleracao * 0.2) * delta)
+		elif esta_atacando and is_on_floor():
+			# No chão: Trava o movimento horizontal
+			velocity.x = move_toward(velocity.x, 0.0, desaceleracao * delta)
+		else:
+			# Controle normal
+			velocity.x = move_toward(velocity.x, direcao_input * velocidade, desaceleracao * delta)
 
 	# --- RESETAR SALTOS NO CHÃO ---
-	# (Corrigido para não recarregar o dash durante um dash)
 	if is_on_floor() and not esta_dando_dash:
 		saltos_restantes = max_saltos
 		pode_dar_dash = true
@@ -89,7 +111,6 @@ func _physics_process(delta: float) -> void:
 
 	if tocando_parede and direcao_input != 0 and sign(direcao_input) == -get_wall_normal().x:
 		esta_na_parede = true
-
 		if segurando_grudar:
 			velocity.y = 0
 		else:
@@ -97,22 +118,20 @@ func _physics_process(delta: float) -> void:
 	else:
 		esta_na_parede = false
 
-	# --- PULO (SEÇÃO MODIFICADA) ---
+	# --- PULO ---
 	if Input.is_action_just_pressed("pular"):
 		if esta_na_parede:
 			var direcao_parede = get_wall_normal().x
-			
 			if direcao_input == 0:
 				velocity.x = direcao_parede * forca_pulo_neutro_x
 			else:
 				velocity.x = direcao_parede * forca_pulo_parede.x
-			
 			velocity.y = forca_pulo_parede.y
 			
 			pulou_da_parede_neste_quadro = true
 			pode_dar_dash = true
 			esta_na_parede = false
-			saltos_restantes = max_saltos - 1 # Pular da parede consome um pulo
+			saltos_restantes = max_saltos - 1
 			
 		elif saltos_restantes > 0:
 			velocity.y = forca_do_pulo
@@ -125,22 +144,18 @@ func _physics_process(delta: float) -> void:
 		direcao_dash = Vector2(Input.get_axis("mover_esquerda", "mover_direita"), Input.get_axis("mover_cima", "mover_baixo"))
 		
 		if direcao_dash == Vector2.ZERO:
-			# 1º Fallback: Tenta usar a velocidade atual
 			direcao_dash = Vector2(sign(velocity.x), 0)
-			
-			# 2º Fallback (Corrigido): Se ainda for zero, usa a direção que o sprite está olhando
 			if direcao_dash == Vector2.ZERO:
-				if animacao.flip_h: # Se está olhando para a esquerda
-					direcao_dash = Vector2.LEFT
-				else: # Se está olhando para a direita
-					direcao_dash = Vector2.RIGHT
+				direcao_dash = Vector2.LEFT if animacao.flip_h else Vector2.RIGHT
 
 		velocity = direcao_dash.normalized() * forca_dash
 		timer_dash.start(duracao_dash)
 
 	move_and_slide()
 	
-	atualizar_animacoes(direcao_input)
+	# Só atualiza animações se NÃO estiver atacando (pois já foi feito acima)
+	if not esta_atacando:
+		atualizar_animacoes(direcao_input)
 
 	if pulou_da_parede_neste_quadro:
 		await get_tree().create_timer(0.1).timeout
@@ -155,24 +170,36 @@ func _on_dash_timer_timeout():
 
 # Este timer é chamado quando a ANIMAÇÃO INTEIRA de ataque acaba
 func _on_attack_duration_timer_timeout():
-	esta_atacando = false # Libera o jogador para se mover
-	hitbox.monitoring = false # Garante que a hitbox seja desligada
+	esta_atacando = false 
+	current_attack_animation = "" 
+	
+	# Garante que ambas as hitboxes sejam desligadas
+	hitbox.monitoring = false
+	hitbox_ground_shape.disabled = true
+	hitbox_air_shape.disabled = true
 
 # Este timer é chamado no MEIO da animação (quando o golpe acerta)
 func _on_attack_hitbox_timer_timeout():
-	# 1. Liga a hitbox
 	hitbox.monitoring = true
 
-	# 2. Desliga a hitbox logo depois
-	# !! AJUSTE ESSE NÚMERO (0.15) !!
-	# É o tempo que a hitbox ficará "ativa"
+	if current_attack_animation == "attack01":
+		hitbox_ground_shape.disabled = false
+	elif current_attack_animation == "attack_air":
+		hitbox_air_shape.disabled = false
+
 	await get_tree().create_timer(0.15).timeout
+	
 	hitbox.monitoring = false
+	hitbox_ground_shape.disabled = true
+	hitbox_air_shape.disabled = true
+	
+# --- SINAL DA HITBOX (CONECTE NO EDITOR) ---
+func _on_hitbox_body_entered(body: Node2D) -> void:
+	if body.has_method("ser_atingido"):
+		body.ser_atingido()
 	
 func _on_animacao_animation_finished() -> void:
-	# (Corrigido o nome da animação para bater com o seu código)
 	if animacao.animation == "wallSick":
-		# (Use o nome exato da sua animação de loop de deslizar)
 		animacao.play("wall_slide_loop")
 
 
@@ -182,43 +209,33 @@ func atualizar_animacoes(direcao: float) -> void:
 	
 	# Prioridade MÁXIMA: Atacando
 	if esta_atacando:
-		animacao.play("attack01") # (Use o nome da sua animação de attack)
-		return # Trava a animação no ataque
+		animacao.play(current_attack_animation)
+		return 
 	
 	# --- LÓGICA DE VIRAR O SPRITE (FLIP_H) ---
-	
-	# 1. Se estiver dando dash, use a direção do dash
 	if esta_dando_dash:
 		if direcao_dash.x > 0:
-			animacao.flip_h = false # Dash para direita
+			animacao.flip_h = false 
 		elif direcao_dash.x < 0:
-			animacao.flip_h = true  # Dash para esquerda
-		# Se direcao_dash.x == 0 (dash reto p/ cima ou baixo), mantém o flip anterior
-	
-	# 2. Se estiver na parede
+			animacao.flip_h = true  
 	elif esta_na_parede:
-		animacao.flip_h = get_wall_normal().x > 0 # Força a olhar p/ longe da parede
-
-	# 3. Lógica Padrão (correndo, pulando, parado)
+		animacao.flip_h = get_wall_normal().x > 0
 	else:
 		if direcao > 0:
-			animacao.flip_h = false 
+			animacao.flip_h = false
 		elif direcao < 0:
-			animacao.flip_h = true  
+			animacao.flip_h = true 
 
+	# --- LÓGICA DE VIRAR A HITBOX ---
 	if animacao.flip_h:
 		hitbox.scale.x = -1 
 	else:
 		hitbox.scale.x = 1  
-
+	
 	
 	# --- LÓGICA DE QUAL ANIMAÇÃO TOCAR (POR PRIORIDADE) ---
-
-	# Prioridade 1: Acabou de pular da parede?
 	if pulou_da_parede_neste_quadro:
-		animacao.play("wallSickOff") # (Use seu nome exato)
-
-	# Prioridade 2: Está dando dash?
+		animacao.play("wallSickOff") 
 	elif esta_dando_dash:
 		if direcao_dash.y < 0:
 			animacao.play("jump") 
@@ -226,34 +243,15 @@ func atualizar_animacoes(direcao: float) -> void:
 			animacao.play("fall")
 		else:
 			animacao.play("dash")
-
-	# Prioridade 3: Está na parede?
 	elif esta_na_parede:
-		# (Use o nome exato da sua animação de "grudar")
 		if animacao.animation != "wallSick" and animacao.animation != "wall_slide_loop":
 			animacao.play("wallSick")
-		
-	# Prioridade 4: Está no ar?
 	elif not is_on_floor():
 		if velocity.y < 0:
 			animacao.play("jump")
 		else:
 			animacao.play("fall")
-
-	# Prioridade 5: Está correndo?
 	elif direcao != 0:
 		animacao.play("run")
-
-	# Prioridade 6: Está parado
 	else:
 		animacao.play("idle")
-
-
-func _on_hitbox_body_entered(body: Node2D) -> void:
-	# Verificamos se o corpo que atingimos (o 'body')
-	# possui o método "ser_atingido".
-	if body.has_method("ser_atingido"):
-		
-		# Se sim (o que significa que é um inimigo),
-		# chamamos essa função nele.
-		body.ser_atingido()

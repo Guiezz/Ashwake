@@ -344,7 +344,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack01",
-"speed": 20.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -405,7 +405,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_air",
-"speed": 21.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -626,7 +626,9 @@ script = ExtResource("1_dovo2")
 position = Vector2(51.000004, 28.000004)
 scale = Vector2(2.0625, 1.8750001)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"attack01"
+animation = &"attack_air"
+frame = 7
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(51, 49)

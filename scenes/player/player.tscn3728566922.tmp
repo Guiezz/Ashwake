@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://dtjporv7xvfnn"]
+[gd_scene load_steps=93 format=3 uid="uid://dtjporv7xvfnn"]
 
 [ext_resource type="Script" uid="uid://cxmuybsajhqdw" path="res://scripts/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://bmi4l3y8lfgxg" path="res://assets/sprites/CharacterPack-Version1/Character-Weapon/Character-Attack-1.png" id="2_je7p5"]
@@ -344,7 +344,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack01",
-"speed": 20.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -405,7 +405,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_air",
-"speed": 21.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -616,9 +616,6 @@ height = 80.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_je7p5"]
 size = Vector2(71, 20)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gx1jg"]
-size = Vector2(53, 60.25)
-
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_dovo2")
 
@@ -626,7 +623,7 @@ script = ExtResource("1_dovo2")
 position = Vector2(51.000004, 28.000004)
 scale = Vector2(2.0625, 1.8750001)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"attack01"
+animation = &"attack03"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(51, 49)
@@ -645,13 +642,9 @@ collision_mask = 2
 monitoring = false
 monitorable = false
 
-[node name="GroundShape" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(54.5, 19)
 shape = SubResource("RectangleShape2D_je7p5")
-
-[node name="AirShape" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(37.5, 15.875)
-shape = SubResource("RectangleShape2D_gx1jg")
 
 [node name="AttackHitboxTimer" type="Timer" parent="."]
 one_shot = true
