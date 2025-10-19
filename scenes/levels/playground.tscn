@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dpv2nfjp0lwkl"]
+[gd_scene load_steps=8 format=3 uid="uid://dpv2nfjp0lwkl"]
 
 [ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_62it3"]
+[ext_resource type="PackedScene" uid="uid://b7b4aefhcqnis" path="res://scenes/enemies/inimigo.tscn" id="2_n6048"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nstmu"]
 size = Vector2(1918, 20.901058)
@@ -90,3 +91,6 @@ offset_bottom = 1080.0
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="ParedeDireita"]
 position = Vector2(1656.75, 785)
 shape = SubResource("RectangleShape2D_c53nr")
+
+[node name="Inimigo" parent="." instance=ExtResource("2_n6048")]
+position = Vector2(1120.3904, 551.76495)
