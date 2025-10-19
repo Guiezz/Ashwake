@@ -21,6 +21,7 @@ shape = SubResource("RectangleShape2D_0787q")
 texture = ExtResource("1_clyw6")
 
 [node name="DetectionRange" type="Area2D" parent="."]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource("CircleShape2D_clyw6")

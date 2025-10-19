@@ -202,9 +202,14 @@ func atualizar_animacoes(direcao: float) -> void:
 	# 3. Lógica Padrão (correndo, pulando, parado)
 	else:
 		if direcao > 0:
-			animacao.flip_h = false # Olhando para a direita
+			animacao.flip_h = false 
 		elif direcao < 0:
-			animacao.flip_h = true  # Olhando para a esquerda
+			animacao.flip_h = true  
+
+	if animacao.flip_h:
+		hitbox.scale.x = -1 
+	else:
+		hitbox.scale.x = 1  
 
 	
 	# --- LÓGICA DE QUAL ANIMAÇÃO TOCAR (POR PRIORIDADE) ---
@@ -242,3 +247,13 @@ func atualizar_animacoes(direcao: float) -> void:
 	# Prioridade 6: Está parado
 	else:
 		animacao.play("idle")
+
+
+func _on_hitbox_body_entered(body: Node2D) -> void:
+	# Verificamos se o corpo que atingimos (o 'body')
+	# possui o método "ser_atingido".
+	if body.has_method("ser_atingido"):
+		
+		# Se sim (o que significa que é um inimigo),
+		# chamamos essa função nele.
+		body.ser_atingido()

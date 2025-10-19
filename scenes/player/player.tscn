@@ -274,7 +274,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack01",
-"speed": 12.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -492,7 +492,7 @@ script = ExtResource("1_dovo2")
 position = Vector2(51.000004, 28.000004)
 scale = Vector2(2.0625, 1.8750001)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"run"
+animation = &"attack01"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(51, 49)
@@ -505,11 +505,14 @@ one_shot = true
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="Hitbox" type="Area2D" parent="."]
+position = Vector2(51, 28)
+collision_layer = 0
+collision_mask = 2
 monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(105.5, 47)
+position = Vector2(54.5, 19)
 shape = SubResource("RectangleShape2D_je7p5")
 
 [node name="AttackHitboxTimer" type="Timer" parent="."]
@@ -519,5 +522,6 @@ one_shot = true
 one_shot = true
 
 [connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="timeout" from="AttackHitboxTimer" to="." method="_on_attack_hitbox_timer_timeout"]
 [connection signal="timeout" from="AttackDurationTimer" to="." method="_on_attack_duration_timer_timeout"]

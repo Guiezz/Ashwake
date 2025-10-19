@@ -93,4 +93,4 @@ position = Vector2(1656.75, 785)
 shape = SubResource("RectangleShape2D_c53nr")
 
 [node name="Inimigo" parent="." instance=ExtResource("2_n6048")]
-position = Vector2(1120.3904, 551.76495)
+position = Vector2(1043, 936)
