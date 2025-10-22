@@ -1,5 +1,11 @@
 extends CharacterBody2D
 
+# --- VARIÁVEIS DE VIDA E DANO ---
+@export var vida_maxima: int = 5
+var vida_atual: int
+var esta_invencivel := false
+var esta_morto := false 
+
 # --- VARIÁVEIS DE MOVIMENTO ---
 @export var velocidade := 300.0
 @export var forca_do_pulo := -400.0
@@ -32,6 +38,9 @@ var current_attack_animation := ""
 @onready var hitbox := $Hitbox
 @onready var attack_hitbox_timer := $AttackHitboxTimer
 @onready var attack_duration_timer := $AttackDurationTimer
+@onready var invencibilidade_timer := $InvencibilidadeTimer
+@onready var hurtbox := $Hurtbox 
+@onready var collision_shape := $CollisionShape2D 
 
 # --- REFERÊNCIAS DAS HITBOX SHAPES ---
 @onready var hitbox_ground_shape := $Hitbox/GroundShape
@@ -41,27 +50,47 @@ var current_attack_animation := ""
 var saltos_restantes := 1
 @export var max_saltos := 2
 
+# --- FUNÇÃO _READY ---
+func _ready() -> void:
+	vida_atual = vida_maxima
+
 
 func _physics_process(delta: float) -> void:
+	
+	# --- LÓGICA DE MORTE (Prioridade 0) ---
+	if esta_morto:
+		
+		# ---- MODIFICAÇÃO IMPORTANTE ----
+		# Se estiver morto, aplica gravidade até atingir o chão
+		if not is_on_floor():
+			velocity.y += gravidade * delta
+			move_and_slide()
+		# --------------------------------
+
+		# Se a animação terminou, checa se o jogador quer reviver
+		if not animacao.is_playing() and animacao.animation == "die":
+			if Input.is_action_just_pressed("pular"): # "pular" é a Barra de Espaço
+				reviver()
+			
+		return # Pula todo o resto (movimento, física, etc.)
+		
+	# --- O RESTO DA FÍSICA (SÓ RODA SE NÃO ESTIVER MORTO) ---
+		
 	var direcao_input := Input.get_axis("mover_esquerda", "mover_direita")
 
 	# --- LÓGICA DE ATAQUE (Prioridade 1) ---
 	if Input.is_action_just_pressed("atacar") and not esta_atacando and not esta_na_parede and not esta_dando_dash:
 		
 		esta_atacando = true
-		# velocity = Vector2.ZERO <-- LINHA REMOVIDA
 		
-		# Garante que ambas as hitboxes comecem desligadas
 		hitbox_ground_shape.disabled = true
 		hitbox_air_shape.disabled = true
 
-		# Decide qual animação usar
 		if is_on_floor():
 			current_attack_animation = "attack01"
 		else:
 			current_attack_animation = "attack_air"
 
-		# Calcula a duração do ataque
 		var frame_count = animacao.sprite_frames.get_frame_count(current_attack_animation)
 		var speed = animacao.sprite_frames.get_animation_speed(current_attack_animation)
 		var duracao_ataque = frame_count / speed
@@ -69,35 +98,24 @@ func _physics_process(delta: float) -> void:
 		attack_duration_timer.start(duracao_ataque)
 		attack_hitbox_timer.start(0.1) 
 
-	# Se estiver atacando, força a animação, mas NÃO PARA a física
 	if esta_atacando:
 		atualizar_animacoes(0.0) 
-		# return <-- LINHA REMOVIDA
-
-	# --- FIM DA LÓGICA DE ATAQUE ---
 
 	# --- GRAVIDADE (MODIFICADA) ---
 	if not is_on_floor() and not esta_dando_dash:
-		# Se estiver atacando no ar, aplica gravidade reduzida
 		if esta_atacando:
 			velocity.y += (gravidade * gravidade_ataque_aereo_mult) * delta
 		else:
-			# Gravidade normal
 			velocity.y += gravidade * delta
 
 	# --- MOVIMENTO HORIZONTAL (MODIFICADO) ---
 	if not esta_dando_dash and not pulou_da_parede_neste_quadro:
 		
-		# Se estiver atacando (no ar ou chão), perde o controle horizontal
 		if esta_atacando and not is_on_floor():
-			# No ar: O jogador não controla, apenas desacelera lentamente
-			# (Mantém um pouco do ímpeto do pulo)
 			velocity.x = move_toward(velocity.x, 0.0, (desaceleracao * 0.2) * delta)
 		elif esta_atacando and is_on_floor():
-			# No chão: Trava o movimento horizontal
 			velocity.x = move_toward(velocity.x, 0.0, desaceleracao * delta)
 		else:
-			# Controle normal
 			velocity.x = move_toward(velocity.x, direcao_input * velocidade, desaceleracao * delta)
 
 	# --- RESETAR SALTOS NO CHÃO ---
@@ -153,13 +171,67 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-	# Só atualiza animações se NÃO estiver atacando (pois já foi feito acima)
 	if not esta_atacando:
 		atualizar_animacoes(direcao_input)
 
 	if pulou_da_parede_neste_quadro:
 		await get_tree().create_timer(0.1).timeout
 		pulou_da_parede_neste_quadro = false
+
+# ==================================================
+# --- FUNÇÕES DE DANO E VIDA ---
+# ==================================================
+
+func tomar_dano(dano: int) -> void:
+	if esta_invencivel or esta_morto: 
+		return
+
+	vida_atual -= dano
+	print("Jogador atingido! Vida restante: ", vida_atual)
+	
+	esta_invencivel = true
+	invencibilidade_timer.start() 
+	
+	animacao.modulate = Color.RED
+	await get_tree().create_timer(0.1).timeout
+	if animacao:
+		animacao.modulate = Color.WHITE
+
+	if vida_atual <= 0:
+		morrer()
+
+func morrer() -> void:
+	if esta_morto: 
+		return
+		
+	print("Jogador morreu!")
+	esta_morto = true
+	
+	# ---- MODIFICAÇÃO IMPORTANTE ----
+	# velocity = Vector2.ZERO <-- REMOVIDO! Deixa a gravidade agir.
+	
+	# Desativa APENAS a hurtbox
+	# collision_shape.disabled = true <-- REMOVIDO! Queremos colidir com o chão.
+	hurtbox.monitoring = false
+	# --------------------------------
+	
+	# Toca a animação de morte
+	animacao.play("die")
+
+
+func reviver() -> void:
+	print("Revivendo...")
+	# Recarrega a cena 'playground'
+	get_tree().reload_current_scene() 
+
+func _on_invencibilidade_timer_timeout():
+	esta_invencivel = false
+	if animacao and not esta_morto: 
+		animacao.modulate = Color.WHITE
+
+func _on_hurtbox_body_entered(body: Node2D) -> void:
+	if body.is_in_group("enemy"):
+		tomar_dano(1) 
 
 
 # --- TIMERS E SINAIS ---
@@ -168,17 +240,14 @@ func _on_dash_timer_timeout():
 	esta_dando_dash = false
 	velocity.x *= 0.5
 
-# Este timer é chamado quando a ANIMAÇÃO INTEIRA de ataque acaba
 func _on_attack_duration_timer_timeout():
 	esta_atacando = false 
 	current_attack_animation = "" 
 	
-	# Garante que ambas as hitboxes sejam desligadas
 	hitbox.monitoring = false
 	hitbox_ground_shape.disabled = true
 	hitbox_air_shape.disabled = true
 
-# Este timer é chamado no MEIO da animação (quando o golpe acerta)
 func _on_attack_hitbox_timer_timeout():
 	hitbox.monitoring = true
 
@@ -193,7 +262,6 @@ func _on_attack_hitbox_timer_timeout():
 	hitbox_ground_shape.disabled = true
 	hitbox_air_shape.disabled = true
 	
-# --- SINAL DA HITBOX (CONECTE NO EDITOR) ---
 func _on_hitbox_body_entered(body: Node2D) -> void:
 	if body.has_method("ser_atingido"):
 		body.ser_atingido()
@@ -207,12 +275,18 @@ func _on_animacao_animation_finished() -> void:
 
 func atualizar_animacoes(direcao: float) -> void:
 	
-	# Prioridade MÁXIMA: Atacando
+	# Prioridade 0: Morto
+	if esta_morto:
+		if animacao.animation != "die":
+			animacao.play("die")
+		return
+
+	# Prioridade 1: Atacando
 	if esta_atacando:
 		animacao.play(current_attack_animation)
 		return 
 	
-	# --- LÓGICA DE VIRAR O SPRITE (FLIP_H) ---
+	# --- LÓGICA DE VIRAR O SPRITE  ---
 	if esta_dando_dash:
 		if direcao_dash.x > 0:
 			animacao.flip_h = false 
@@ -233,7 +307,7 @@ func atualizar_animacoes(direcao: float) -> void:
 		hitbox.scale.x = 1  
 	
 	
-	# --- LÓGICA DE QUAL ANIMAÇÃO TOCAR (POR PRIORIDADE) ---
+	# --- LÓGICA DAS ANIMAÇÕES ---
 	if pulou_da_parede_neste_quadro:
 		animacao.play("wallSickOff") 
 	elif esta_dando_dash:
