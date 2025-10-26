@@ -11,7 +11,7 @@ var esta_morto := false
 @export var forca_do_pulo := -400.0
 @export var gravidade := 1200.0
 @export var desaceleracao := 1000.0
-@export var gravidade_ataque_aereo_mult := 0.2
+@export var gravidade_ataque_aereo_mult := 0.8
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
@@ -60,21 +60,18 @@ func _physics_process(delta: float) -> void:
 	# --- LÓGICA DE MORTE (Prioridade 0) ---
 	if esta_morto:
 		
-		# ---- MODIFICAÇÃO IMPORTANTE ----
-		# Se estiver morto, aplica gravidade até atingir o chão
 		if not is_on_floor():
 			velocity.y += gravidade * delta
 			move_and_slide()
 		# --------------------------------
 
-		# Se a animação terminou, checa se o jogador quer reviver
 		if not animacao.is_playing() and animacao.animation == "die":
-			if Input.is_action_just_pressed("pular"): # "pular" é a Barra de Espaço
+			if Input.is_action_just_pressed("pular"):
 				reviver()
 			
-		return # Pula todo o resto (movimento, física, etc.)
+		return
 		
-	# --- O RESTO DA FÍSICA (SÓ RODA SE NÃO ESTIVER MORTO) ---
+	# --- O RESTO DA FÍSICA  ---
 		
 	var direcao_input := Input.get_axis("mover_esquerda", "mover_direita")
 
@@ -101,14 +98,14 @@ func _physics_process(delta: float) -> void:
 	if esta_atacando:
 		atualizar_animacoes(0.0) 
 
-	# --- GRAVIDADE (MODIFICADA) ---
+	# --- GRAVIDADE ---
 	if not is_on_floor() and not esta_dando_dash:
 		if esta_atacando:
 			velocity.y += (gravidade * gravidade_ataque_aereo_mult) * delta
 		else:
 			velocity.y += gravidade * delta
 
-	# --- MOVIMENTO HORIZONTAL (MODIFICADO) ---
+	# --- MOVIMENTO HORIZONTAL ---
 	if not esta_dando_dash and not pulou_da_parede_neste_quadro:
 		
 		if esta_atacando and not is_on_floor():
@@ -207,15 +204,8 @@ func morrer() -> void:
 	print("Jogador morreu!")
 	esta_morto = true
 	
-	# ---- MODIFICAÇÃO IMPORTANTE ----
-	# velocity = Vector2.ZERO <-- REMOVIDO! Deixa a gravidade agir.
-	
-	# Desativa APENAS a hurtbox
-	# collision_shape.disabled = true <-- REMOVIDO! Queremos colidir com o chão.
 	hurtbox.monitoring = false
-	# --------------------------------
 	
-	# Toca a animação de morte
 	animacao.play("die")
 
 

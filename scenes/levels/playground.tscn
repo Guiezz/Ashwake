@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dpv2nfjp0lwkl"]
 
 [ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_62it3"]
-[ext_resource type="PackedScene" uid="uid://b7b4aefhcqnis" path="res://scenes/enemies/inimigo.tscn" id="2_n6048"]
+[ext_resource type="PackedScene" uid="uid://bkqx4reyme660" path="res://scenes/enemies/golem.tscn" id="2_n6048"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nstmu"]
 size = Vector2(1918, 20.901058)
@@ -25,6 +25,8 @@ position = Vector2(234, 188)
 
 [node name="Chao" type="StaticBody2D" parent="."]
 position = Vector2(0, 432)
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chao"]
 position = Vector2(962, 637)
@@ -38,6 +40,8 @@ offset_bottom = 647.0
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 position = Vector2(1043, 668)
+collision_layer = 4
+collision_mask = 0
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D2"]
 offset_right = 169.0
@@ -50,6 +54,8 @@ shape = SubResource("RectangleShape2D_62it3")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
 position = Vector2(635, 804)
+collision_layer = 4
+collision_mask = 0
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D3"]
 offset_right = 169.0
@@ -61,6 +67,8 @@ position = Vector2(84.5, 10)
 shape = SubResource("RectangleShape2D_62it3")
 
 [node name="ParedeEsquerda" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ParedeEsquerda"]
 position = Vector2(12.5, 539)
@@ -77,6 +85,8 @@ position = Vector2(198, 803)
 shape = SubResource("RectangleShape2D_o8weq")
 
 [node name="ParedeDireita" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ParedeDireita"]
 position = Vector2(1905, 543)
@@ -92,5 +102,5 @@ offset_bottom = 1080.0
 position = Vector2(1656.75, 785)
 shape = SubResource("RectangleShape2D_c53nr")
 
-[node name="Inimigo" parent="." instance=ExtResource("2_n6048")]
-position = Vector2(1043, 936)
+[node name="Golem" parent="." instance=ExtResource("2_n6048")]
+position = Vector2(1172, 982)
