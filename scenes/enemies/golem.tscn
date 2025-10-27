@@ -304,10 +304,9 @@ script = ExtResource("1_txad0")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_vpd5q")
-animation = &"attack"
-frame = 5
+animation = &"idle"
 
-[node name="AttackHitbox" type="Area2D" parent="AnimatedSprite2D"]
+[node name="AttackHitbox" type="Area2D" parent="AnimatedSprite2D" groups=["enemy"]]
 collision_layer = 0
 monitoring = false
 

@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://c5fe2tvr7rtn"]
+
+[ext_resource type="Script" uid="uid://fvhmdx67o8ce" path="res://scripts/enemies/bullet.gd" id="1_rr653"]
+[ext_resource type="Texture2D" uid="uid://brxoq6dy4dj8f" path="res://assets/sprites/Inimigos/Soul/Soul/attack/bullet.png" id="2_006w7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vymk"]
+atlas = ExtResource("2_006w7")
+region = Rect2(0, 0, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhda0"]
+atlas = ExtResource("2_006w7")
+region = Rect2(0, 96, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tftms"]
+atlas = ExtResource("2_006w7")
+region = Rect2(0, 192, 96, 96)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7jlk"]
+atlas = ExtResource("2_006w7")
+region = Rect2(0, 288, 96, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6vfq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8vymk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhda0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tftms")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y7jlk")
+}],
+"loop": true,
+"name": &"bullet",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oppp3"]
+
+[node name="Bullet" type="Area2D" groups=["enemy_projectile"]]
+collision_layer = 0
+collision_mask = 5
+script = ExtResource("1_rr653")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_6vfq7")
+animation = &"bullet"
+frame_progress = 0.12993744
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 0)
+shape = SubResource("CircleShape2D_oppp3")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

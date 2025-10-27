@@ -10,7 +10,7 @@ var vida_atual: int
 
 # --- FÍSICA E IA ---
 var gravidade: float = ProjectSettings.get_setting("physics/2d/default_gravity")
-@export var velocidade: float = 80.0 # Golem é mais lento
+@export var velocidade: float = 100.0
 @export var forca_pulo: float = -300.0
 
 # Referência para o jogador
@@ -94,10 +94,10 @@ func processar_ia(delta: float) -> void:
 
 		State.ATTACKING:
 			velocity.x = 0
-			if sprite.animation != "attack": # Só executa na primeira vez
+			if sprite.animation != "attack": 
 				sprite.play("attack")
-				# Liga a hitbox!
-				attack_delay_timer.start(0.7)
+				
+				attack_delay_timer.start(0.5)
 
 		State.HIT:
 			# Não faz nada, só espera a animação "hit" terminar.
@@ -124,6 +124,7 @@ func _on_detection_range_body_exited(body: Node2D) -> void:
 func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 	# Verifica se o corpo que entrou é o jogador
 	if body.is_in_group("player"):
+		print("TOMANDO DANO")
 		# Tenta chamar a função de tomar dano no script do player
 		if body.has_method("tomar_dano"):
 			body.tomar_dano(1) #
@@ -152,8 +153,8 @@ func morrer() -> void:
 		
 	print("Golem derrotado!")
 	current_state = State.DEAD
-	collision_shape.disabled = true
-	detection_range.monitoring = false
+	collision_shape.set_deferred("disabled", true)
+	detection_range.set_deferred("monitoring", false)
 	sprite.play("death")
 
 # --- SINAL DE ANIMAÇÃO ---
