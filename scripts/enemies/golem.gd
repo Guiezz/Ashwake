@@ -22,7 +22,8 @@ var player_ref: Node2D = null
 @onready var gap_detector := $GapDetector
 @onready var detection_range := $DetectionRange
 @onready var collision_shape := $CollisionShape2D
-@onready var attack_hitbox := $AnimatedSprite2D/AttackHitbox # <-- NOVO
+@onready var attack_hitbox := $AnimatedSprite2D/AttackHitbox 
+@onready var attack_delay_timer := $AttackDelayTimer
 
 func _ready() -> void:
 	vida_atual = vida_maxima
@@ -30,7 +31,6 @@ func _ready() -> void:
 	detection_range.body_entered.connect(_on_detection_range_body_entered)
 	detection_range.body_exited.connect(_on_detection_range_body_exited)
 	sprite.animation_finished.connect(_on_animation_finished)
-	attack_hitbox.body_entered.connect(_on_attack_hitbox_body_entered) # <-- NOVO
 
 func _physics_process(delta: float) -> void:
 	# 1. Aplicar Gravidade (só se não estiver morto)
@@ -70,9 +70,10 @@ func processar_ia(delta: float) -> void:
 			
 			# Vira o sprite e os detectores
 			if direcao_x != 0:
-				sprite.flip_h = (direcao_x < 0)
+				sprite.flip_h = (direcao_x > 0)
 				# Ajusta os RayCasts baseado na direção
 				var dir_local = 1 if not sprite.flip_h else -1
+				attack_hitbox.scale.x = dir_local
 				wall_detector.target_position.x = abs(wall_detector.target_position.x) * dir_local
 				gap_detector.target_position.x = abs(gap_detector.target_position.x) * dir_local
 
@@ -88,7 +89,7 @@ func processar_ia(delta: float) -> void:
 			
 			# Se chegar perto o suficiente, ataque
 			var distancia = global_position.distance_to(player_ref.global_position)
-			if distancia < 100.0: # 100 pixels de alcance de ataque
+			if distancia < 200.0:
 				current_state = State.ATTACKING
 
 		State.ATTACKING:
@@ -96,7 +97,7 @@ func processar_ia(delta: float) -> void:
 			if sprite.animation != "attack": # Só executa na primeira vez
 				sprite.play("attack")
 				# Liga a hitbox!
-				attack_hitbox.monitoring = true # <-- MUDANÇA AQUI
+				attack_delay_timer.start(0.7)
 
 		State.HIT:
 			# Não faz nada, só espera a animação "hit" terminar.
@@ -128,7 +129,7 @@ func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 			body.tomar_dano(1) #
 		
 		# Desativa a hitbox imediatamente para não acertar várias vezes
-		attack_hitbox.monitoring = false 
+		# attack_hitbox.set_deferred("monitoring", false)
 
 # --- DANO E MORTE ---
 
@@ -157,13 +158,27 @@ func morrer() -> void:
 
 # --- SINAL DE ANIMAÇÃO ---
 
+func _ativar_hitbox_ataque() -> void:
+	print("Hitbox ATIVADA (pela animação)")
+	attack_hitbox.monitoring = true
+
+func _desativar_hitbox_ataque() -> void:
+	print("Hitbox DESATIVADA (pela animação)")
+	# Usamos set_deferred para evitar bugs de física
+	attack_hitbox.set_deferred("monitoring", false)
+
 func _on_animation_finished() -> void:
 	if sprite.animation == "death":
 		queue_free()
 	
 	elif sprite.animation == "attack":
-		attack_hitbox.monitoring = false # <-- MUDANÇA AQUI
+		attack_hitbox.set_deferred("monitoring", false) # <-- MUDANÇA AQUI
 		current_state = State.IDLE
 	
 	elif sprite.animation == "hit":
 		current_state = State.IDLE
+
+
+func _on_attack_delay_timer_timeout() -> void:
+	if current_state == State.ATTACKING:
+		attack_hitbox.monitoring = true
