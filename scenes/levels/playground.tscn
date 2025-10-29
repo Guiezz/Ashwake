@@ -111,4 +111,4 @@ position = Vector2(1140, 936)
 position = Vector2(1576, 379)
 
 [node name="Soul" parent="." instance=ExtResource("4_c53nr")]
-position = Vector2(140, 290)
+position = Vector2(166, 482)

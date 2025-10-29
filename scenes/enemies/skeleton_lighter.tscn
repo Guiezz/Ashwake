@@ -280,11 +280,11 @@ size = Vector2(57, 54.5)
 size = Vector2(45.5, 44)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_scutc"]
-radius = 549.0
+radius = 407.04422
 
 [node name="SkeletonLighter" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 4
 script = ExtResource("1_0e7po")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -308,7 +308,6 @@ scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_uiw3v")
 
 [node name="DetectionRange" type="Area2D" parent="."]
-visible = false
 
 [node name="DetectionRange" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource("CircleShape2D_scutc")

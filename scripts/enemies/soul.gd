@@ -1,20 +1,23 @@
-# soul.gd
 extends CharacterBody2D
 
 # --- ESTADOS DA IA ---
-enum State { IDLE, CHASING, ATTACKING, DEAD }
-var current_state = State.IDLE
+enum State { PATROL, CHASING, ATTACKING, DEAD } # <--- atualizado
+var current_state = State.PATROL # <--- atualizado
 
 # --- VIDA DO INIMIGO ---
-@export var vida_maxima: int = 3 # Soul pode ser mais frágil
+@export var vida_maxima: int = 3
 var vida_atual: int
 
 # --- IA E MOVIMENTO ---
-@export var velocidade: float = 100.0 # Velocidade de voo
-@export var distancia_ataque: float = 250.0 # Distância para começar a atacar
-@export var distancia_parar: float = 180.0 # Distância para parar de perseguir e atacar
-@export var cooldown_ataque: float = 1.5 # Tempo entre ataques
-@export var tempo_disparo_ataque: float = 0.3 # Tempo após iniciar o ataque para disparar <--- NOVO
+@export var velocidade: float = 100.0
+@export var distancia_ataque: float = 250.0
+@export var distancia_parar: float = 180.0
+@export var patrol_range: float = 200.0 # <--- novo
+@export var cooldown_ataque: float = 1.5
+@export var tempo_disparo_ataque: float = 0.3
+
+var start_position: Vector2 # <--- novo
+var patrol_target: Vector2 # <--- novo
 
 # Referência para o jogador
 var player_ref: CharacterBody2D = null
@@ -25,20 +28,21 @@ var player_ref: CharacterBody2D = null
 @onready var collision_shape := $CollisionShape2D
 @onready var attack_cooldown_timer := $AttackCooldownTimer
 @onready var projectile_spawn_point := $ProjectileSpawnPoint
-@onready var attack_shot_timer := $AttackShotTimer # <--- NOVO TIMER REFERENCIADO
+@onready var attack_shot_timer := $AttackShotTimer
 
-# Pre-carrega a cena do projétil
-const BulletScene = preload("res://scenes/enemies/soul/bullet.tscn") # Ajuste o caminho!
+# Cena do projétil
+const BulletScene = preload("res://scenes/enemies/soul/bullet.tscn")
 
 func _ready() -> void:
 	vida_atual = vida_maxima
-	# Conecta os sinais que vamos usar NO CÓDIGO (outros serão no editor)
-	# (As conexões do _ready podem ser feitas no editor também, se preferir)
+	start_position = global_position # <--- novo
+	patrol_target = start_position + Vector2(patrol_range, 0) # <--- novo
+	
 	detection_range.body_entered.connect(_on_detection_range_body_entered)
 	detection_range.body_exited.connect(_on_detection_range_body_exited)
 	sprite.animation_finished.connect(_on_animation_finished)
 	attack_cooldown_timer.timeout.connect(_on_attack_cooldown_timer_timeout)
-	attack_shot_timer.timeout.connect(disparar_projetil) 
+	attack_shot_timer.timeout.connect(disparar_projetil)
 
 func _physics_process(delta: float) -> void:
 	processar_ia(delta)
@@ -47,20 +51,34 @@ func _physics_process(delta: float) -> void:
 # --- LÓGICA DE IA (MÁQUINA DE ESTADOS) ---
 func processar_ia(delta: float) -> void:
 
-	if player_ref == null and current_state != State.DEAD:
-		current_state = State.IDLE
+	if player_ref == null and current_state != State.DEAD and current_state != State.ATTACKING:
+		current_state = State.PATROL # <--- atualizado
 
 	match current_state:
-		State.IDLE:
-			sprite.play("idle")
-			velocity = velocity.move_toward(Vector2.ZERO, velocidade * 0.1)
+		State.PATROL: # <--- substitui o antigo IDLE
+			sprite.play("move")
+
+			var direcao = global_position.direction_to(patrol_target)
+			velocity = direcao * (velocidade * 0.3) # patrulha mais lenta
+
+			if direcao.x != 0:
+				sprite.flip_h = (direcao.x < 0)
+
+			# Inverte o ponto de patrulha ao chegar perto
+			if global_position.distance_to(patrol_target) < 10.0:
+				if patrol_target == start_position:
+					patrol_target = start_position + Vector2(patrol_range, 0)
+				else:
+					patrol_target = start_position
+
+			# Detecção de jogador
 			if player_ref != null:
 				current_state = State.CHASING
 
 		State.CHASING:
 			sprite.play("move")
 			if player_ref == null:
-				current_state = State.IDLE
+				current_state = State.PATROL # <--- atualizado
 				return
 
 			var direcao = global_position.direction_to(player_ref.global_position)
@@ -70,6 +88,8 @@ func processar_ia(delta: float) -> void:
 				sprite.flip_h = (direcao.x < 0)
 
 			var distancia = global_position.distance_to(player_ref.global_position)
+
+			# Pode atacar?
 			if distancia <= distancia_ataque and attack_cooldown_timer.is_stopped():
 				current_state = State.ATTACKING
 			elif distancia <= distancia_parar:
@@ -79,18 +99,15 @@ func processar_ia(delta: float) -> void:
 			velocity = Vector2.ZERO
 			if sprite.animation != "attack":
 				sprite.play("attack")
-				# Inicia o timer para disparar o projétil no meio da animação
-				attack_shot_timer.start(tempo_disparo_ataque) # <--- INICIA O TIMER DE DISPARO AQUI
+				attack_shot_timer.start(tempo_disparo_ataque)
 
 		State.DEAD:
 			velocity = Vector2.ZERO
 
 # --- DISPARO ---
 func disparar_projetil() -> void:
-	# Não dispara se não estiver mais atacando (ex: tomou dano e mudou de estado)
-	# ou se o jogador sumiu
+	# Não dispara se não estiver mais atacando ou se o jogador sumiu
 	if current_state != State.ATTACKING or player_ref == null:
-		# Garante que o cooldown não iniciou se o tiro falhou
 		if not attack_cooldown_timer.is_stopped():
 			attack_cooldown_timer.stop()
 		return
@@ -101,10 +118,10 @@ func disparar_projetil() -> void:
 	get_tree().current_scene.add_child(bullet_instance)
 	bullet_instance.iniciar(projectile_spawn_point.global_position, direcao_disparo)
 
-	# Inicia o cooldown APÓS disparar
 	attack_cooldown_timer.start(cooldown_ataque)
+	print("Projétil disparado! Cooldown iniciado.")
 
-# --- SINAIS DE DETECÇÃO ---
+# --- DETECÇÃO ---
 func _on_detection_range_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player_ref = body
@@ -121,15 +138,19 @@ func ser_atingido() -> void:
 	vida_atual -= 1
 	print("Soul atingido! Vida restante: ", vida_atual)
 
+	sprite.modulate = Color.RED
+	await get_tree().create_timer(0.1).timeout
+	if sprite:
+		sprite.modulate = Color.WHITE
+
 	if vida_atual <= 0:
 		morrer()
 	else:
-		# IMPORTANTE: Se o Soul tomar dano enquanto ataca, cancele o disparo
+		# Cancela ataque se for atingido durante o disparo
 		if current_state == State.ATTACKING and not attack_shot_timer.is_stopped():
-			attack_shot_timer.stop() # Cancela o timer de disparo
-			# Decide para qual estado ir (pode ser IDLE, ou um estado HIT se criar)
-			current_state = State.IDLE # Volta para idle após ser atingido
-			sprite.play("idle") # Toca a animação idle (ou hit se tiver)
+			attack_shot_timer.stop()
+			current_state = State.PATROL # <--- atualizado
+			sprite.play("move") # <--- atualizado
 
 func morrer() -> void:
 	if current_state == State.DEAD:
@@ -138,29 +159,23 @@ func morrer() -> void:
 	print("Soul derrotado!")
 	current_state = State.DEAD
 	velocity = Vector2.ZERO
-	# Para timers caso esteja morrendo no meio do ataque
 	attack_shot_timer.stop()
 	attack_cooldown_timer.stop()
 	collision_shape.set_deferred("disabled", true)
 	detection_range.set_deferred("monitoring", false)
 	sprite.play("death")
 
-# --- SINAIS DE ANIMAÇÃO E TIMER ---
+# --- ANIMAÇÕES E TIMERS ---
 func _on_animation_finished() -> void:
 	if sprite.animation == "death":
 		queue_free()
 
 	elif sprite.animation == "attack":
+		# Após atacar, volta a perseguir se o jogador ainda estiver no range
 		if player_ref != null:
 			current_state = State.CHASING
 		else:
-			current_state = State.IDLE
+			current_state = State.PATROL # <--- atualizado
 
-# Sinal do Timer de Cooldown
 func _on_attack_cooldown_timer_timeout() -> void:
-	print("Cooldown do ataque terminou!") # (Opcional: para depuração)
-	pass # Não precisa mudar o estado aqui diretamente
-
-
-func _on_animated_sprite_2d_animation_finished() -> void:
-	pass # Replace with function body.
+	pass

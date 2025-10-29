@@ -294,11 +294,11 @@ size = Vector2(57, 30)
 size = Vector2(63, 88)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wgx8s"]
-radius = 456.0537
+radius = 375.00534
 
 [node name="Golem" type="CharacterBody2D" groups=["enemy"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 4
 script = ExtResource("1_txad0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

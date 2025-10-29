@@ -163,7 +163,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_reend")
 }],
-"loop": false,
+"loop": true,
 "name": &"attack",
 "speed": 7.0
 }, {
@@ -192,7 +192,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_codrd")
 }],
-"loop": false,
+"loop": true,
 "name": &"death",
 "speed": 9.0
 }, {
@@ -251,27 +251,27 @@ radius = 13.5
 height = 50.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fuoos"]
-radius = 378.0013
+radius = 259.03088
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_55shl"]
 radius = 14.0
 height = 50.0
 
 [node name="Soul" type="CharacterBody2D" groups=["enemy"]]
-collision_layer = 2
-collision_mask = 4
+collision_layer = 0
 motion_mode = 1
 script = ExtResource("1_55shl")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_6slxc")
-animation = &"move"
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, -1)
 shape = SubResource("CapsuleShape2D_3swrd")
 
 [node name="DetectionRange" type="Area2D" parent="."]
+collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource("CircleShape2D_fuoos")
@@ -281,7 +281,7 @@ debug_color = Color(0.79749364, 0.36881906, 0.54932696, 0.41960785)
 one_shot = true
 
 [node name="ProjectileSpawnPoint" type="Marker2D" parent="."]
-position = Vector2(16, 9)
+position = Vector2(4, 4)
 
 [node name="AttackShotTimer" type="Timer" parent="."]
 one_shot = true
