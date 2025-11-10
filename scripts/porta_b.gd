@@ -1,8 +1,14 @@
 extends Area2D
 
 var doorNode = self
-@onready var labelDoorA = get_node("/root/Node2D/PortaA/textoA")
-@onready var labelDoorB = get_node("/root/Node2D/PortaB/textoB")
+@onready var labelDoorA = get_node("/root/home/PortaA/textoA")
+@onready var labelDoorB = get_node("/root/home/PortaB/textoB")
+@onready var colorA = get_node("/root/home/PortaA/ColorRect")
+@onready var colorB = get_node("/root/home/PortaB/ColorRect")
+@onready var collisionA = get_node("/root/home/PortaA/CollisionShape2D")
+@onready var collisionB = get_node("/root/home/PortaB/CollisionShape2D")
+
+var singleton = Singleton
 
 var player_in_area: bool = false  # Track if player is inside
 
@@ -10,8 +16,24 @@ func _ready() -> void:
 	labelDoorA.visible = false
 	labelDoorB.visible = false  
 
+	# PortaA logic
+	if "level1" in singleton.completed_levels:
+		colorA.color = Color.GREEN   # Level completed → green
+		collisionA.disabled = true   # Disable collision so player can't enter
+	else:
+		colorA.color = Color.RED
+		collisionA.disabled = false
+
+	# PortaB logic
+	if "level2" in singleton.completed_levels:
+		colorB.color = Color.GREEN
+		collisionB.disabled = true
+	else:
+		colorB.color = Color.RED
+		collisionB.disabled = false
+
 func _on_body_entered(body: Node2D) -> void:
-	if body.name == "Player":  # only react to player
+	if body.name == "Player":
 		player_in_area = true
 		match doorNode.name:
 			"PortaA":
@@ -19,16 +41,16 @@ func _on_body_entered(body: Node2D) -> void:
 			"PortaB":
 				labelDoorB.visible = true
 
+
 func _on_body_exited(body: Node2D) -> void:
 	if body.name == "Player":
 		player_in_area = false
-		print(doorNode.name)
-		print("saiu")
 		match doorNode.name:
 			"PortaB":
 				labelDoorB.visible = false
 			"PortaA":
 				labelDoorA.visible = false
+
 
 func _process(delta: float) -> void:
 	if player_in_area and Input.is_action_just_pressed("interact"): 
@@ -38,9 +60,10 @@ func _process(delta: float) -> void:
 			"PortaB":
 				change_scene_to_porta_b()
 
-# Example scene change functions
+
 func change_scene_to_porta_a():
 	get_tree().change_scene_to_file("res://scenes/levels/level1.tscn")
+
 
 func change_scene_to_porta_b():
 	get_tree().change_scene_to_file("res://scenes/levels/level2.tscn")

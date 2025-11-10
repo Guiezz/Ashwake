@@ -19,7 +19,7 @@ size = Vector2(394, 325)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v38iq"]
 size = Vector2(528.5, 495)
 
-[node name="Node2D" type="Node2D"]
+[node name="level1" type="Node2D"]
 
 [node name="Chao" type="StaticBody2D" parent="."]
 position = Vector2(0, 432)
@@ -104,11 +104,11 @@ shape = SubResource("RectangleShape2D_v38iq")
 [node name="Player" parent="." instance=ExtResource("1_ootpb")]
 position = Vector2(730, 657)
 
-[node name="Soul" parent="." instance=ExtResource("1_dopym")]
+[node name="Soul" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
 position = Vector2(1107, 434)
 
-[node name="Golem" parent="." instance=ExtResource("2_ootpb")]
+[node name="Golem" parent="." groups=["enemies"] instance=ExtResource("2_ootpb")]
 position = Vector2(1268, 956)
 
-[node name="Soul2" parent="." instance=ExtResource("1_dopym")]
+[node name="Soul2" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
 position = Vector2(198, 712)

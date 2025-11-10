@@ -32,7 +32,7 @@ func _process(delta: float) -> void:
 	pass
 "
 
-[node name="Node2D" type="Node2D"]
+[node name="home" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_u4wd2")]
 position = Vector2(852, 955)

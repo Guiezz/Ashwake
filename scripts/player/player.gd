@@ -45,7 +45,7 @@ var proximo_ataque_solicitado := false # <--- NOVO: Buffer de input
 @onready var hurtbox := $Hurtbox 
 @onready var collision_shape := $CollisionShape2D 
 @onready var combo_window_timer := $ComboWindowTimer # <--- NOVO: Adicione este Timer na cena
-
+ 
 # --- REFERÊNCIAS DAS HITBOX SHAPES ---
 @onready var hitbox_ground_shape := $Hitbox/GroundShape
 @onready var hitbox_air_shape := $Hitbox/AirShape 

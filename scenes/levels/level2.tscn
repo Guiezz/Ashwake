@@ -16,7 +16,7 @@ size = Vector2(394, 325)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v38iq"]
 size = Vector2(528.5, 335)
 
-[node name="Node2D" type="Node2D"]
+[node name="level2" type="Node2D"]
 
 [node name="Chao" type="StaticBody2D" parent="."]
 position = Vector2(0, 432)
@@ -32,12 +32,6 @@ offset_left = 3.0
 offset_top = 626.0
 offset_right = 1921.0
 offset_bottom = 647.0
-
-[node name="StaticBody2D3" type="StaticBody2D" parent="."]
-position = Vector2(479, 746)
-scale = Vector2(3.585, 1)
-collision_layer = 4
-collision_mask = 0
 
 [node name="ParedeEsquerda" type="StaticBody2D" parent="."]
 collision_layer = 4
@@ -78,11 +72,11 @@ shape = SubResource("RectangleShape2D_v38iq")
 [node name="Player" parent="." instance=ExtResource("1_71baw")]
 position = Vector2(444, 966)
 
-[node name="Soul" parent="." instance=ExtResource("2_niitk")]
+[node name="Soul" parent="." groups=["enemies"] instance=ExtResource("2_niitk")]
 position = Vector2(1657, 706)
 
-[node name="Golem" parent="." instance=ExtResource("3_d5djh")]
+[node name="Golem" parent="." groups=["enemies"] instance=ExtResource("3_d5djh")]
 position = Vector2(1268, 956)
 
-[node name="Soul2" parent="." instance=ExtResource("2_niitk")]
+[node name="Soul2" parent="." groups=["enemies"] instance=ExtResource("2_niitk")]
 position = Vector2(198, 712)
