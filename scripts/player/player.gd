@@ -251,8 +251,11 @@ func morrer() -> void:
 	hurtbox.monitoring = false
 	
 	animacao.play("die")
-
-
+	
+	await animacao.animation_finished
+	
+	get_tree().change_scene_to_file("res://scenes/home.tscn")
+	
 func reviver() -> void:
 	print("Revivendo...")
 	# Recarrega a cena 'playground'

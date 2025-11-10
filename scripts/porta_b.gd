@@ -40,7 +40,7 @@ func _process(delta: float) -> void:
 
 # Example scene change functions
 func change_scene_to_porta_a():
-	get_tree().change_scene_to_file("res://scenes/levels/playground.tscn")
+	get_tree().change_scene_to_file("res://scenes/levels/level1.tscn")
 
 func change_scene_to_porta_b():
-	get_tree().change_scene_to_file("res://scenes/levels/playground.tscn")
+	get_tree().change_scene_to_file("res://scenes/levels/level2.tscn")
