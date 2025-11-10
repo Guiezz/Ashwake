@@ -1,8 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://tdry1uywhao1"]
 
-[ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_tt30a"]
-[ext_resource type="Script" uid="uid://c2uiwiesn18w3" path="res://collision_shape_2d.gd" id="2_1ey7h"]
-[ext_resource type="Script" uid="uid://0nfmupum4uyt" path="res://porta_b.gd" id="2_o1ld7"]
+[ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_u4wd2"]
+[ext_resource type="Script" uid="uid://0nfmupum4uyt" path="res://scripts/porta_b.gd" id="2_w18ys"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ey7h"]
 size = Vector2(1918, 20.901058)
@@ -19,9 +18,23 @@ size = Vector2(528.5, 586)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lxycn"]
 size = Vector2(87, 183)
 
+[sub_resource type="GDScript" id="GDScript_reixx"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
 [node name="Node2D" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("1_tt30a")]
+[node name="Player" parent="." instance=ExtResource("1_u4wd2")]
 position = Vector2(852, 955)
 
 [node name="Chao" type="StaticBody2D" parent="."]
@@ -82,12 +95,12 @@ visibility_layer = 4
 position = Vector2(779.12, 0)
 collision_layer = 4
 collision_mask = 4
-script = ExtResource("2_o1ld7")
+script = ExtResource("2_w18ys")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PortaB"]
 position = Vector2(506.5, 963.5)
 shape = SubResource("RectangleShape2D_lxycn")
-script = ExtResource("2_1ey7h")
+script = SubResource("GDScript_reixx")
 
 [node name="ColorRect" type="ColorRect" parent="PortaB"]
 light_mask = 8
@@ -112,12 +125,12 @@ visibility_layer = 4
 position = Vector2(20, 0)
 collision_layer = 4
 collision_mask = 4
-script = ExtResource("2_o1ld7")
+script = ExtResource("2_w18ys")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PortaA"]
 position = Vector2(506.5, 963.5)
 shape = SubResource("RectangleShape2D_lxycn")
-script = ExtResource("2_1ey7h")
+script = SubResource("GDScript_reixx")
 
 [node name="textoA" type="Label" parent="PortaA"]
 offset_left = 418.0
