@@ -3,8 +3,8 @@ extends Area2D
 var doorNode = self
 @onready var labelDoorA = get_node("/root/home/PortaA/textoA")
 @onready var labelDoorB = get_node("/root/home/PortaB/textoB")
-@onready var colorA = get_node("/root/home/PortaA/ColorRect")
-@onready var colorB = get_node("/root/home/PortaB/ColorRect")
+#@onready var colorA = get_node("/root/home/PortaA/ColorRect")
+#@onready var colorB = get_node("/root/home/PortaB/ColorRect")
 @onready var collisionA = get_node("/root/home/PortaA/CollisionShape2D")
 @onready var collisionB = get_node("/root/home/PortaB/CollisionShape2D")
 
@@ -18,18 +18,18 @@ func _ready() -> void:
 
 	# PortaA logic
 	if "level1" in singleton.completed_levels:
-		colorA.color = Color.GREEN   # Level completed → green
+		#colorA.color = Color.GREEN   # Level completed → green
 		collisionA.disabled = true   # Disable collision so player can't enter
 	else:
-		colorA.color = Color.RED
+		#colorA.color = Color.RED
 		collisionA.disabled = false
 
 	# PortaB logic
 	if "level2" in singleton.completed_levels:
-		colorB.color = Color.GREEN
+		#colorB.color = Color.GREEN
 		collisionB.disabled = true
 	else:
-		colorB.color = Color.RED
+		#colorB.color = Color.RED
 		collisionB.disabled = false
 
 func _on_body_entered(body: Node2D) -> void:

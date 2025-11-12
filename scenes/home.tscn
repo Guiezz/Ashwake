@@ -1,7 +1,56 @@
-[gd_scene load_steps=9 format=3 uid="uid://tdry1uywhao1"]
+[gd_scene load_steps=16 format=4 uid="uid://tdry1uywhao1"]
 
+[ext_resource type="Texture2D" uid="uid://u1uiqsp7pa46" path="res://assets/sprites/homeScene/Floor Wall Tiles small.PNG" id="1_reixx"]
 [ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_u4wd2"]
 [ext_resource type="Script" uid="uid://0nfmupum4uyt" path="res://scripts/porta_b.gd" id="2_w18ys"]
+[ext_resource type="Texture2D" uid="uid://gqgbymweuhpd" path="res://assets/sprites/homeScene/WindowDoor Tiles Small.PNG" id="3_w18ys"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uhids"]
+texture = ExtResource("1_reixx")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yxilm"]
+texture = ExtResource("3_w18ys")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_yxilm"]
+sources/0 = SubResource("TileSetAtlasSource_uhids")
+sources/1 = SubResource("TileSetAtlasSource_yxilm")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ey7h"]
 size = Vector2(1918, 20.901058)
@@ -14,6 +63,27 @@ size = Vector2(394, 542)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w1mvj"]
 size = Vector2(528.5, 586)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_reixx"]
+texture = ExtResource("3_w18ys")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_uhids"]
+sources/0 = SubResource("TileSetAtlasSource_reixx")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lxycn"]
 size = Vector2(87, 183)
@@ -34,10 +104,31 @@ func _process(delta: float) -> void:
 
 [node name="home" type="Node2D"]
 
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+show_behind_parent = true
+light_mask = 512
+visibility_layer = 512
+z_index = -1
+position = Vector2(894, 810)
+scale = Vector2(5.225, 5.225)
+tile_map_data = PackedByteArray("AAD5//3/AAAAAAAAAAD5//7/AAAAAAAAAAD5////AAAAAAAAAAD5/wAAAAAAAAAAAAD5/wEAAAAAAAAAAAD5/wIAAAAAAAAAAAAGAP3/AAAAAAAAAAAGAP7/AAAAAAAAAAAGAP//AAAAAAAAAAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAD6/wMAAAABAAAAAAD7/wMAAAABAAAAAAD8/wMAAAABAAAAAAD9/wMAAAABAAAAAAD+/wMAAAABAAAAAAD//wMAAAABAAAAAAAAAAMAAAABAAAAAAABAAMAAAABAAAAAAACAAMAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAFAAMAAAABAAAAAAAGAAMAAAABAAAAAAD5/wMAAAABAAAAAAAFAP3/AAABAAAAAAD6//3/AAABAAAAAAD6/wIAAAADAAMAAAAFAAIAAAAFAAMAAAD6//7/AAADAAIAAAAFAP7/AAAFAAIAAAD8//7/AAAEAAIAAAD9//7/AAAEAAIAAAD+//7/AAAEAAIAAAD///7/AAAEAAMAAAAAAP7/AAAEAAMAAAABAP7/AAAEAAMAAAACAP7/AAAEAAMAAAADAP7/AAAEAAIAAAAEAP7/AAAEAAIAAAD7//7/AAAEAAIAAAD6////AAAEAAIAAAD7////AAAEAAIAAAD8////AAACAAMAAAD9////AAACAAMAAAD+////AAACAAMAAAD/////AAAEAAIAAAAAAP//AAAEAAIAAAABAP//AAAEAAIAAAACAP//AAAEAAIAAAADAP//AAAEAAIAAAAEAP//AAACAAMAAAAFAP//AAACAAMAAAD6/wAAAAAEAAIAAAD7/wAAAAAEAAIAAAD8/wAAAAAEAAIAAAD9/wAAAQACAAAAAAD+/wAAAQABAAMAAAD//wAAAQABAAMAAAAAAAAAAQABAAMAAAABAAAAAQABAAMAAAACAAAAAQADAAAAAAADAAAAAAAEAAIAAAAEAAAAAAAEAAIAAAAFAAAAAAAEAAIAAAD6/wEAAAAEAAIAAAD7/wEAAAAEAAIAAAD8/wEAAAAEAAIAAAD9/wEAAQACAAEAAAD+/wEAAQAAAAMAAAD//wEAAQAAAAMAAAAAAAEAAQAAAAMAAAABAAEAAQAAAAMAAAACAAEAAQADAAEAAAADAAEAAAAEAAIAAAAEAAEAAAAEAAIAAAAFAAEAAAAEAAIAAAD7/wIAAAAEAAIAAAD8/wIAAAAEAAMAAAD9/wIAAQACAAIAAAD+/wIAAQACAAMAAAD//wIAAQACAAMAAAAAAAIAAQACAAMAAAABAAIAAQACAAMAAAACAAIAAQADAAIAAAADAAIAAAAEAAIAAAAEAAIAAAAEAAIAAAD7//3/AAABAAAAAAD8//3/AAABAAAAAAD9//3/AAABAAAAAAD+//3/AAABAAAAAAD///3/AAABAAAAAAAAAP3/AAABAAAAAAABAP3/AAABAAAAAAACAP3/AAABAAAAAAADAP3/AAABAAAAAAAEAP3/AAABAAAAAAA=")
+tile_set = SubResource("TileSet_yxilm")
+
+[node name="TileMapLayer2" type="TileMapLayer" parent="."]
+show_behind_parent = true
+light_mask = 512
+visibility_layer = 512
+z_index = -2
+position = Vector2(894, 810)
+scale = Vector2(5.225, 5.225)
+tile_map_data = PackedByteArray("AAD5//3/AAAAAAAAAAD5//7/AAAAAAAAAAD5////AAAAAAAAAAD5/wAAAAAAAAAAAAD5/wEAAAAAAAAAAAD5/wIAAAAAAAAAAAAGAP3/AAAAAAAAAAAGAP7/AAAAAAAAAAAGAP//AAAAAAAAAAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAD6/wMAAAABAAAAAAD7/wMAAAABAAAAAAD8/wMAAAABAAAAAAD9/wMAAAABAAAAAAD+/wMAAAABAAAAAAD//wMAAAABAAAAAAAAAAMAAAABAAAAAAABAAMAAAABAAAAAAACAAMAAAABAAAAAAADAAMAAAABAAAAAAAEAAMAAAABAAAAAAAFAAMAAAABAAAAAAAGAAMAAAABAAAAAAD5/wMAAAABAAAAAAAFAP3/AAABAAAAAAD6//3/AAABAAAAAAD6/wIAAAADAAMAAAAFAAIAAAAFAAMAAAD6//7/AAADAAIAAAAFAP7/AAAFAAIAAAD8//7/AAAEAAIAAAD9//7/AAAEAAIAAAD+//7/AAAEAAIAAAD///7/AAAEAAMAAAAAAP7/AAAEAAMAAAABAP7/AAAEAAMAAAACAP7/AAAEAAMAAAADAP7/AAAEAAIAAAAEAP7/AAAEAAIAAAD7//7/AAAEAAIAAAD6////AAAEAAIAAAD7////AAAEAAIAAAD8////AAACAAMAAAD9////AAACAAMAAAD+////AAACAAMAAAD/////AAAEAAIAAAAAAP//AAAEAAIAAAABAP//AAAEAAIAAAACAP//AAAEAAIAAAADAP//AAAEAAIAAAAEAP//AAACAAMAAAAFAP//AAACAAMAAAD6/wAAAAAEAAIAAAD7/wAAAAAEAAIAAAD8/wAAAAAEAAIAAAD9/wAAAAAEAAIAAAD+/wAAAAAEAAIAAAD//wAAAAAEAAIAAAAAAAAAAAAEAAIAAAABAAAAAAAEAAIAAAACAAAAAAAEAAIAAAADAAAAAAAEAAIAAAAEAAAAAAAEAAIAAAAFAAAAAAAEAAIAAAD6/wEAAAAEAAIAAAD7/wEAAAAEAAIAAAD8/wEAAAAEAAIAAAD9/wEAAAAEAAIAAAD+/wEAAAAEAAIAAAD//wEAAAAEAAIAAAAAAAEAAAAEAAIAAAABAAEAAAACAAMAAAACAAEAAAACAAMAAAADAAEAAAACAAMAAAAEAAEAAAAEAAIAAAAFAAEAAAAEAAIAAAD7/wIAAAAEAAIAAAD8/wIAAAAEAAMAAAD9/wIAAAAEAAIAAAD+/wIAAAAEAAIAAAD//wIAAAACAAMAAAAAAAIAAAACAAMAAAABAAIAAAAEAAIAAAACAAIAAAAEAAIAAAADAAIAAAAEAAIAAAAEAAIAAAAEAAIAAAD7//3/AAABAAAAAAD8//3/AAABAAAAAAD9//3/AAABAAAAAAD+//3/AAABAAAAAAD///3/AAABAAAAAAAAAP3/AAABAAAAAAABAP3/AAABAAAAAAACAP3/AAABAAAAAAADAP3/AAABAAAAAAAEAP3/AAABAAAAAAA=")
+tile_set = SubResource("TileSet_yxilm")
+
 [node name="Player" parent="." instance=ExtResource("1_u4wd2")]
 position = Vector2(852, 955)
 
 [node name="Chao" type="StaticBody2D" parent="."]
+z_index = -2
 position = Vector2(0, 432)
 collision_layer = 4
 collision_mask = 0
@@ -47,12 +138,14 @@ position = Vector2(962, 637)
 shape = SubResource("RectangleShape2D_1ey7h")
 
 [node name="ColorRect" type="ColorRect" parent="Chao"]
+visible = false
 offset_left = 3.0
 offset_top = 626.0
 offset_right = 1921.0
 offset_bottom = 647.0
 
 [node name="ParedeEsquerda" type="StaticBody2D" parent="."]
+z_index = -2
 collision_layer = 4
 collision_mask = 0
 
@@ -61,6 +154,7 @@ position = Vector2(12.5, 539)
 shape = SubResource("RectangleShape2D_o1ld7")
 
 [node name="ColorRect" type="ColorRect" parent="ParedeEsquerda"]
+visible = false
 offset_left = -1.0
 offset_top = 531.0
 offset_right = 397.0
@@ -71,6 +165,7 @@ position = Vector2(198, 803)
 shape = SubResource("RectangleShape2D_2ayvv")
 
 [node name="ParedeDireita" type="StaticBody2D" parent="."]
+z_index = -2
 collision_layer = 4
 collision_mask = 0
 
@@ -79,6 +174,7 @@ position = Vector2(1905, 543)
 shape = SubResource("RectangleShape2D_o1ld7")
 
 [node name="ColorRect" type="ColorRect" parent="ParedeDireita"]
+visible = false
 offset_left = 1392.0
 offset_top = 490.0
 offset_right = 1921.0
@@ -97,25 +193,22 @@ collision_layer = 4
 collision_mask = 4
 script = ExtResource("2_w18ys")
 
+[node name="TileMapLayer" type="TileMapLayer" parent="PortaB"]
+position = Vector2(506.88, 967)
+scale = Vector2(2.76, 2.76)
+tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAAAP//AAABAAAAAAD//wAAAAAAAAEAAAAAAAAAAAABAAEAAAD//wEAAAAAAAIAAAAAAAEAAAABAAIAAAA=")
+tile_set = SubResource("TileSet_uhids")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PortaB"]
 position = Vector2(506.5, 963.5)
 shape = SubResource("RectangleShape2D_lxycn")
 script = SubResource("GDScript_reixx")
 
-[node name="ColorRect" type="ColorRect" parent="PortaB"]
-light_mask = 8
-visibility_layer = 8
-offset_left = 463.0
-offset_top = 871.0
-offset_right = 551.0
-offset_bottom = 1056.0
-color = Color(4.1392445e-06, 0.731033, 0.5544671, 1)
-
 [node name="textoB" type="Label" parent="PortaB"]
 offset_left = 412.88
-offset_top = 838.0
+offset_top = 880.0
 offset_right = 601.88
-offset_bottom = 861.0
+offset_bottom = 903.0
 text = "pressione Q para entrar!"
 
 [node name="PortaA" type="Area2D" parent="."]
@@ -134,19 +227,16 @@ script = SubResource("GDScript_reixx")
 
 [node name="textoA" type="Label" parent="PortaA"]
 offset_left = 418.0
-offset_top = 836.0
+offset_top = 884.0
 offset_right = 607.0
-offset_bottom = 859.0
+offset_bottom = 907.0
 text = "pressione Q para entrar!"
 
-[node name="ColorRect" type="ColorRect" parent="PortaA"]
-light_mask = 8
-visibility_layer = 8
-offset_left = 463.0
-offset_top = 871.0
-offset_right = 551.0
-offset_bottom = 1056.0
-color = Color(0.23343825, 0.641072, 0.99999994, 1)
+[node name="TileMapLayer" type="TileMapLayer" parent="PortaA"]
+position = Vector2(506.88, 967)
+scale = Vector2(2.76, 2.76)
+tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAAAP//AAABAAAAAAD//wAAAAAAAAEAAAAAAAAAAAABAAEAAAD//wEAAAAAAAIAAAAAAAEAAAABAAIAAAA=")
+tile_set = SubResource("TileSet_uhids")
 
 [node name="Node2D" type="Node2D" parent="."]
 
