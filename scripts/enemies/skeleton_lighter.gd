@@ -8,6 +8,8 @@ var current_state = State.PATROL
 @export var vida_maxima: int = 5
 var vida_atual: int
 
+@export var xp_value: int = 8 # Skeletons valem 8 XP
+
 # --- FÍSICA E IA ---
 var gravidade: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var velocidade: float = 100.0
@@ -161,7 +163,11 @@ func morrer() -> void:
 	if current_state == State.DEAD:
 		return
 
+	print("Skeleton derrotado!") 
 	current_state = State.DEAD
+	
+	Singleton.add_xp_to_run(xp_value)
+	
 	collision_shape.set_deferred("disabled", true)
 	detection_range.set_deferred("monitoring", false)
 	sprite.play("death")

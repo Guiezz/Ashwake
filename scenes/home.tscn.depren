@@ -1,0 +1,156 @@
+[gd_scene load_steps=9 format=3 uid="uid://tdry1uywhao1"]
+
+[ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_u4wd2"]
+[ext_resource type="Script" uid="uid://0nfmupum4uyt" path="res://scripts/porta_b.gd" id="2_w18ys"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ey7h"]
+size = Vector2(1918, 20.901058)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o1ld7"]
+size = Vector2(25, 1078)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2ayvv"]
+size = Vector2(394, 542)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w1mvj"]
+size = Vector2(528.5, 586)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lxycn"]
+size = Vector2(87, 183)
+
+[sub_resource type="GDScript" id="GDScript_reixx"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[node name="home" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_u4wd2")]
+position = Vector2(852, 955)
+
+[node name="Chao" type="StaticBody2D" parent="."]
+position = Vector2(0, 432)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Chao"]
+position = Vector2(962, 637)
+shape = SubResource("RectangleShape2D_1ey7h")
+
+[node name="ColorRect" type="ColorRect" parent="Chao"]
+offset_left = 3.0
+offset_top = 626.0
+offset_right = 1921.0
+offset_bottom = 647.0
+
+[node name="ParedeEsquerda" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParedeEsquerda"]
+position = Vector2(12.5, 539)
+shape = SubResource("RectangleShape2D_o1ld7")
+
+[node name="ColorRect" type="ColorRect" parent="ParedeEsquerda"]
+offset_left = -1.0
+offset_top = 531.0
+offset_right = 397.0
+offset_bottom = 1078.0
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ParedeEsquerda"]
+position = Vector2(198, 803)
+shape = SubResource("RectangleShape2D_2ayvv")
+
+[node name="ParedeDireita" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ParedeDireita"]
+position = Vector2(1905, 543)
+shape = SubResource("RectangleShape2D_o1ld7")
+
+[node name="ColorRect" type="ColorRect" parent="ParedeDireita"]
+offset_left = 1392.0
+offset_top = 490.0
+offset_right = 1921.0
+offset_bottom = 1080.0
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ParedeDireita"]
+position = Vector2(1656.75, 785)
+shape = SubResource("RectangleShape2D_w1mvj")
+
+[node name="PortaB" type="Area2D" parent="."]
+show_behind_parent = true
+light_mask = 4
+visibility_layer = 4
+position = Vector2(779.12, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_w18ys")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PortaB"]
+position = Vector2(506.5, 963.5)
+shape = SubResource("RectangleShape2D_lxycn")
+script = SubResource("GDScript_reixx")
+
+[node name="ColorRect" type="ColorRect" parent="PortaB"]
+light_mask = 8
+visibility_layer = 8
+offset_left = 463.0
+offset_top = 871.0
+offset_right = 551.0
+offset_bottom = 1056.0
+color = Color(4.1392445e-06, 0.731033, 0.5544671, 1)
+
+[node name="textoB" type="Label" parent="PortaB"]
+offset_left = 412.88
+offset_top = 838.0
+offset_right = 601.88
+offset_bottom = 861.0
+text = "pressione Q para entrar!"
+
+[node name="PortaA" type="Area2D" parent="."]
+show_behind_parent = true
+light_mask = 4
+visibility_layer = 4
+position = Vector2(20, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_w18ys")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PortaA"]
+position = Vector2(506.5, 963.5)
+shape = SubResource("RectangleShape2D_lxycn")
+script = SubResource("GDScript_reixx")
+
+[node name="textoA" type="Label" parent="PortaA"]
+offset_left = 418.0
+offset_top = 836.0
+offset_right = 607.0
+offset_bottom = 859.0
+text = "pressione Q para entrar!"
+
+[node name="ColorRect" type="ColorRect" parent="PortaA"]
+light_mask = 8
+visibility_layer = 8
+offset_left = 463.0
+offset_top = 871.0
+offset_right = 551.0
+offset_bottom = 1056.0
+color = Color(0.23343825, 0.641072, 0.99999994, 1)
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[connection signal="body_entered" from="PortaB" to="PortaB" method="_on_body_entered"]
+[connection signal="body_exited" from="PortaB" to="PortaB" method="_on_body_exited"]
+[connection signal="body_entered" from="PortaA" to="PortaA" method="_on_body_entered"]
+[connection signal="body_exited" from="PortaA" to="PortaA" method="_on_body_exited"]

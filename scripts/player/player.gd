@@ -254,11 +254,12 @@ func morrer() -> void:
 	
 	await animacao.animation_finished
 	
+	Singleton.reset_run_stats()
+	
 	get_tree().change_scene_to_file("res://scenes/home.tscn")
 	
 func reviver() -> void:
 	print("Revivendo...")
-	# Recarrega a cena 'playground'
 	get_tree().reload_current_scene() 
 
 func _on_invencibilidade_timer_timeout():

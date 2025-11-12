@@ -10,9 +10,31 @@ var game_started := false
 # --- Completed Levels Tracking ---
 var completed_levels: Array[String] = []  # Armazena os nomes das fases completadas
 
+# --- VARIÁVEIS PERMANENTES DE XP E NÍVEL ---
+var current_xp: int = 0
+var xp_to_next_level: int = 10 # O jogador começa precisando de 10 XP
+var current_level: int = 1
+var run_xp: int = 0 # Acumulador de XP ganho (para salvar no final)
+
+
+# --- NOVAS VARIÁVEIS DE ESTADO DA RUN ---
+# Estas rastreiam o estado *durante* a fase (temporário)
+var run_current_xp: int = 0
+var run_xp_to_next: int = 0
+var run_level: int = 0
+
+
+# --- SINAL DE LEVEL UP ---
+# Emitido quando o jogador sobe de nível (mesmo que temporariamente)
+signal player_leveled_up(new_level)
+
 
 func _ready() -> void:
 	call_deferred("_init_after_ready")
+	
+	# --- MUDANÇA IMPORTANTE ---
+	# Inicializa os stats da run quando o jogo começa
+	reset_run_stats()
 
 
 func _init_after_ready() -> void:
@@ -37,7 +59,11 @@ func _refresh_scene_data() -> void:
 		returning_home = false
 		game_started = false
 		return
-
+	
+	# --- CORREÇÃO DE BUG ---
+	# Removemos o reset de XP daqui para não resetar
+	# toda vez que a cena é carregada.
+	
 	if not game_started:
 		game_started = true
 
@@ -80,3 +106,64 @@ func _mark_level_completed(level_name: String) -> void:
 		return
 	completed_levels.append(level_name)
 	print("Level completed:", level_name)
+
+	print("Salvando XP da run: ", run_xp)
+	
+	# --- FUNÇÕES ATUALIZADAS ---
+	# 1. Salva o estado atual da run como permanente
+	permanent_save_xp()
+		
+	# 2. Reseta os stats da run de volta ao estado (agora salvo)
+	reset_run_stats()
+	
+
+# --- FUNÇÃO ATUALIZADA ---
+# Salva o estado ATUAL da run como o novo estado PERMANENTE
+func permanent_save_xp() -> void:
+	current_xp = run_current_xp
+	xp_to_next_level = run_xp_to_next
+	current_level = run_level
+	
+	print("--- STATS PERMANENTES SALVOS ---")
+	print("Nível: ", current_level, " | XP: ", current_xp, "/", xp_to_next_level)
+
+
+# --- FUNÇÃO ATUALIZADA (LÓGICA PRINCIPAL) ---
+func add_xp_to_run(amount: int) -> void:
+	# 'run_xp' acumula o total ganho na fase (para o print)
+	run_xp += amount 
+	
+	# Adiciona o XP à "barra de XP" temporária da run
+	run_current_xp += amount
+
+	print("XP ganho: ", amount, " | XP da Run: ", run_current_xp, "/", run_xp_to_next)
+
+	# --- LÓGICA DE LEVEL UP (REAL, NÃO SIMULADA) ---
+	# Agora operamos DIRETAMENTE nas variáveis da run
+	while run_current_xp >= run_xp_to_next:
+		run_level += 1
+		
+		# --- ESTA É A CORREÇÃO QUE VOCÊ PEDIU ---
+		# Subtrai o XP usado para upar da barra de XP temporária
+		run_current_xp -= run_xp_to_next
+		
+		# Calcula o próximo nível
+		run_xp_to_next = int(run_xp_to_next * 1.5)
+		
+		# Emite o sinal para a UI
+		player_leveled_up.emit(run_level)
+		print("LEVEL UP (Temporário)! Nível: ", run_level, " | XP Atual: ", run_current_xp, " | Próximo em: ", run_xp_to_next, " XP")
+
+
+# --- FUNÇÃO ATUALIZADA E RENOMEADA ---
+# Esta função reseta os stats temporários da run para os permanentes.
+# É chamada no início do jogo, ao morrer, ou ao completar uma fase.
+func reset_run_stats() -> void:
+	run_xp = 0
+	
+	# Copia os stats PERMANENTES para os stats TEMPORÁRIOS da run
+	run_current_xp = current_xp
+	run_xp_to_next = xp_to_next_level
+	run_level = current_level
+	
+	print("Stats da run resetados para o estado permanente.")
