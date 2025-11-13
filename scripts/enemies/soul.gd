@@ -21,6 +21,11 @@ var vida_atual: int
 var start_position: Vector2 # <--- novo
 var patrol_target: Vector2 # <--- novo
 
+# --- KNOCKBACK E STUN ---
+@export var knockback_force: float = 250.0
+@export var hit_stun_time: float = 0.25
+var knockback_timer: float = 0.0
+
 # Referência para o jogador
 var player_ref: CharacterBody2D = null
 
@@ -31,6 +36,7 @@ var player_ref: CharacterBody2D = null
 @onready var attack_cooldown_timer := $AttackCooldownTimer
 @onready var projectile_spawn_point := $ProjectileSpawnPoint
 @onready var attack_shot_timer := $AttackShotTimer
+@onready var blood_particles := $BloodParticles # adicione este nó na cena!
 
 # Cena do projétil
 const BulletScene = preload("res://scenes/enemies/soul/bullet.tscn")
@@ -47,7 +53,14 @@ func _ready() -> void:
 	attack_shot_timer.timeout.connect(disparar_projetil)
 
 func _physics_process(delta: float) -> void:
-	processar_ia(delta)
+	if knockback_timer > 0.0:
+		knockback_timer -= delta
+		velocity.x = lerp(velocity.x, 0.0, delta * 5.0)
+		if knockback_timer <= 0.0 and current_state != State.DEAD:
+			current_state = State.PATROL
+	else:
+		processar_ia(delta)
+
 	move_and_slide()
 
 # --- LÓGICA DE IA (MÁQUINA DE ESTADOS) ---
@@ -128,17 +141,37 @@ func _on_detection_range_body_exited(body: Node2D) -> void:
 		player_ref = null
 
 # --- DANO E MORTE ---
-func ser_atingido() -> void:
+func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state == State.DEAD:
 		return
 
-	vida_atual -= 1
+	vida_atual -= dano
 	print("Soul atingido! Vida restante: ", vida_atual)
 
-	sprite.modulate = Color.RED
+	# --- Partículas de sangue ---
+	if blood_particles:
+		blood_particles.global_position = global_position
+		blood_particles.emitting = false
+		blood_particles.restart()
+		blood_particles.emitting = true
+
+	# --- Knockback ---
+	var direcao_knockback = 0
+	if origem != Vector2.ZERO:
+		direcao_knockback = sign(global_position.x - origem.x)
+	else:
+		direcao_knockback = 1 if sprite.flip_h else -1
+
+	velocity.x = direcao_knockback * knockback_force
+	velocity.y = -abs(velocidade * 0.4)
+	knockback_timer = hit_stun_time
+	current_state = State.PATROL
+
+	# --- Flash visual ---
+	sprite.modulate = Color(1, 0.5, 0.5)
 	await get_tree().create_timer(0.1).timeout
 	if sprite:
-		sprite.modulate = Color.WHITE
+		sprite.modulate = Color(1, 1, 1)
 
 	if vida_atual <= 0:
 		morrer()

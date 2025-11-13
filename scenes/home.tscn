@@ -125,7 +125,7 @@ tile_map_data = PackedByteArray("AAD5//3/AAAAAAAAAAD5//7/AAAAAAAAAAD5////AAAAAAA
 tile_set = SubResource("TileSet_yxilm")
 
 [node name="Player" parent="." instance=ExtResource("1_u4wd2")]
-position = Vector2(852, 955)
+position = Vector2(819, 959)
 
 [node name="Chao" type="StaticBody2D" parent="."]
 z_index = -2
@@ -239,6 +239,10 @@ tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAAAP//AAABAAAAAAD//wAAAAAAAAE
 tile_set = SubResource("TileSet_uhids")
 
 [node name="Node2D" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(895, 875)
+zoom = Vector2(2.04, 2.04)
 
 [connection signal="body_entered" from="PortaB" to="PortaB" method="_on_body_entered"]
 [connection signal="body_exited" from="PortaB" to="PortaB" method="_on_body_exited"]
