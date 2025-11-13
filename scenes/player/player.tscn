@@ -359,7 +359,8 @@ wait_time = 0.2
 one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(97, -176)
+position = Vector2(97, -114)
+enabled = false
 zoom = Vector2(1.38, 1.38)
 
 [node name="Hitbox" type="Area2D" parent="."]
