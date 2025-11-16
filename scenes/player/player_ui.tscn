@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmuq4rcrr835e"]
+
+[ext_resource type="Script" uid="uid://diek6y6ovl1hr" path="res://scripts/player/player_ui.gd" id="1_32d7b"]
+
+[node name="player_ui" type="CanvasLayer"]
+script = ExtResource("1_32d7b")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HealthContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HealthLabel" type="Label" parent="MarginContainer/VBoxContainer/HealthContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+
+[node name="HealthBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HealthContainer"]
+custom_minimum_size = Vector2(200, 25)
+layout_mode = 2
+max_value = 5.0
+show_percentage = false
+
+[node name="HealthText" type="Label" parent="MarginContainer/VBoxContainer/HealthContainer/HealthBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+
+[node name="XPContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="XPLabel" type="Label" parent="MarginContainer/VBoxContainer/XPContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+
+[node name="XPBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/XPContainer"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+max_value = 10.0
+show_percentage = false
+
+[node name="XPText" type="Label" parent="MarginContainer/VBoxContainer/XPContainer/XPBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+
+[node name="EnemyCountLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2

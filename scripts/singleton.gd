@@ -1,5 +1,8 @@
 extends Node
 
+signal xp_updated(current, next_level)
+signal enemy_count_updated(count)
+
 ## --- Game State Variables ---
 var enemy_count: Array[Node] = []    # List of active enemy nodes
 var enemy_label: Label = null        # Reference to the UI label showing the enemy count
@@ -79,6 +82,7 @@ func _refresh_scene_data() -> void:
 
 
 func update_enemy_label() -> void:
+	enemy_count_updated.emit(enemy_count.size())
 	if enemy_label != null:
 		enemy_label.text = "Enemies: %d" % enemy_count.size()
 
@@ -130,28 +134,19 @@ func permanent_save_xp() -> void:
 
 # --- FUNÇÃO ATUALIZADA (LÓGICA PRINCIPAL) ---
 func add_xp_to_run(amount: int) -> void:
-	# 'run_xp' acumula o total ganho na fase (para o print)
 	run_xp += amount 
-	
-	# Adiciona o XP à "barra de XP" temporária da run
 	run_current_xp += amount
+	
+	xp_updated.emit(run_current_xp, run_xp_to_next)
 
 	print("XP ganho: ", amount, " | XP da Run: ", run_current_xp, "/", run_xp_to_next)
 
-	# --- LÓGICA DE LEVEL UP (REAL, NÃO SIMULADA) ---
-	# Agora operamos DIRETAMENTE nas variáveis da run
 	while run_current_xp >= run_xp_to_next:
 		run_level += 1
-		
-		# --- ESTA É A CORREÇÃO QUE VOCÊ PEDIU ---
-		# Subtrai o XP usado para upar da barra de XP temporária
 		run_current_xp -= run_xp_to_next
-		
-		# Calcula o próximo nível
 		run_xp_to_next = int(run_xp_to_next * 1.5)
-		
-		# Emite o sinal para a UI
 		player_leveled_up.emit(run_level)
+		xp_updated.emit(run_current_xp, run_xp_to_next)
 		print("LEVEL UP (Temporário)! Nível: ", run_level, " | XP Atual: ", run_current_xp, " | Próximo em: ", run_xp_to_next, " XP")
 
 
@@ -165,5 +160,7 @@ func reset_run_stats() -> void:
 	run_current_xp = current_xp
 	run_xp_to_next = xp_to_next_level
 	run_level = current_level
+	
+	xp_updated.emit(run_current_xp, run_xp_to_next)
 	
 	print("Stats da run resetados para o estado permanente.")

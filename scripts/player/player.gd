@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal health_changed(nova_vida, vida_maxima)
+
 # --- VARIÁVEIS DE VIDA E DANO ---
 @export var vida_maxima: int = 5
 var vida_atual: int
@@ -54,9 +56,11 @@ var proximo_ataque_solicitado := false # <--- NOVO: Buffer de input
 var saltos_restantes := 1
 @export var max_saltos := 2
 
+
 # --- FUNÇÃO _READY ---
 func _ready() -> void:
 	vida_atual = vida_maxima
+	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima)
 
 
 # --- NOVA FUNÇÃO DE ATAQUE (Refatorada) ---
@@ -228,6 +232,7 @@ func tomar_dano(dano: int) -> void:
 		return
 
 	vida_atual -= dano
+	health_changed.emit(vida_atual, vida_maxima)
 	print("Jogador atingido! Vida restante: ", vida_atual)
 	
 	esta_invencivel = true
