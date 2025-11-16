@@ -433,3 +433,25 @@ func atualizar_animacoes(direcao: float) -> void:
 		animacao.play("run")
 	else:
 		animacao.play("idle")
+		
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	# Verifica se o objeto que a espada tocou tem a função 'rebater'
+	if area.has_method("rebater"):
+		
+		# Calcula a direção do rebatedor (para frente do player)
+		var direcao_rebate = Vector2.RIGHT
+		if animacao.flip_h:
+			direcao_rebate = Vector2.LEFT
+			
+		# Executa o parry
+		area.rebater(direcao_rebate)
+		
+		# (Opcional) Efeito de "Time Stop" para dar impacto (Game Juice!)
+		efeito_parry()
+
+func efeito_parry():
+	# Congela o jogo por uma fração de segundo
+	var time_scale_original = Engine.time_scale
+	Engine.time_scale = 0.05
+	await get_tree().create_timer(0.05 * 0.05).timeout # Espera em tempo real reduzido
+	Engine.time_scale = time_scale_original
