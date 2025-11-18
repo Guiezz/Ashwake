@@ -26,6 +26,8 @@ var run_current_xp: int = 0
 var run_xp_to_next: int = 0
 var run_level: int = 0
 
+var player_health_run: int = -1 # Começa -1 para indicar que não foi definida
+
 
 # --- SINAL DE LEVEL UP ---
 # Emitido quando o jogador sobe de nível (mesmo que temporariamente)
@@ -91,11 +93,11 @@ func update_enemy_label() -> void:
 		# Marca a fase como completada
 		_mark_level_completed(get_tree().current_scene.name)
 
-	if game_started and enemy_count.size() == 0 and get_tree().current_scene.name != "home" and returning_home:
-		returning_home = false
-		print("All enemies defeated — returning to home scene...")
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scenes/home.tscn")
+	#if game_started and enemy_count.size() == 0 and get_tree().current_scene.name != "home" and returning_home:
+	#	returning_home = false
+	#	print("All enemies defeated — returning to home scene...")
+	#	await get_tree().create_timer(0.5).timeout
+	#	get_tree().change_scene_to_file("res://scenes/home.tscn")
 
 
 func on_enemy_removed(enemy: CharacterBody2D) -> void:
@@ -156,11 +158,13 @@ func add_xp_to_run(amount: int) -> void:
 func reset_run_stats() -> void:
 	run_xp = 0
 	
-	# Copia os stats PERMANENTES para os stats TEMPORÁRIOS da run
+	completed_levels.clear() 
+	player_health_run = -1
+	
 	run_current_xp = current_xp
 	run_xp_to_next = xp_to_next_level
 	run_level = current_level
 	
 	xp_updated.emit(run_current_xp, run_xp_to_next)
 	
-	print("Stats da run resetados para o estado permanente.")
+	print("Stats da run e Fases resetados.")

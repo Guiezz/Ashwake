@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjlddcene7rlp"]
+
+[ext_resource type="Texture2D" uid="uid://ckrq1lbqs2gxk" path="res://assets/sprites/oak_woods_v1.0/decorations/lamp.png" id="1_d4qof"]
+[ext_resource type="Script" uid="uid://cgyuori57u6om" path="res://scripts/portal.gd" id="1_or51j"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_or51j"]
+size = Vector2(26, 59)
+
+[node name="Portal" type="Area2D"]
+scale = Vector2(1.5, 1.5)
+script = ExtResource("1_or51j")
+proxima_cena = "uid://bremupbl61my8"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("1_d4qof")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -1.5)
+scale = Vector2(1.5, 1.5)
+shape = SubResource("RectangleShape2D_or51j")

@@ -1,14 +1,11 @@
-[gd_scene load_steps=22 format=4 uid="uid://cx1fja1blqoqo"]
+[gd_scene load_steps=19 format=4 uid="uid://d26bjf537uopw"]
 
-[ext_resource type="Texture2D" uid="uid://cbpfic6cftgkv" path="res://assets/sprites/oak_woods_v1.0/oak_woods_tileset.png" id="1_1seuy"]
-[ext_resource type="PackedScene" uid="uid://5ao1j2ur88b6" path="res://scenes/enemies/soul/soul.tscn" id="1_dopym"]
-[ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_ootpb"]
-[ext_resource type="Script" uid="uid://cjri4oqyg5ruc" path="res://scripts/level_1.gd" id="1_plydf"]
-[ext_resource type="PackedScene" uid="uid://bkqx4reyme660" path="res://scenes/enemies/golem.tscn" id="2_ootpb"]
-[ext_resource type="Texture2D" uid="uid://5vrb8gqcb1bt" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_2.png" id="4_1seuy"]
-[ext_resource type="Texture2D" uid="uid://bot85npq1pvar" path="res://assets/sprites/homeScene/Free-Sky-with-Clouds-Background-Pixel-Art4.jpg" id="4_bfxgj"]
-[ext_resource type="Texture2D" uid="uid://dskyybo4ei4md" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_3.png" id="6_2r1tl"]
-[ext_resource type="PackedScene" uid="uid://cjlddcene7rlp" path="res://scenes/levels/portal.tscn" id="8_8a7m2"]
+[ext_resource type="Script" uid="uid://cvbcbhk48fsgi" path="res://scripts/level_3.gd" id="1_7eb4w"]
+[ext_resource type="Texture2D" uid="uid://cbpfic6cftgkv" path="res://assets/sprites/oak_woods_v1.0/oak_woods_tileset.png" id="2_hadiw"]
+[ext_resource type="Texture2D" uid="uid://bot85npq1pvar" path="res://assets/sprites/homeScene/Free-Sky-with-Clouds-Background-Pixel-Art4.jpg" id="5_ah4rv"]
+[ext_resource type="Texture2D" uid="uid://5vrb8gqcb1bt" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_2.png" id="6_522sc"]
+[ext_resource type="Texture2D" uid="uid://dskyybo4ei4md" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_3.png" id="7_a82vw"]
+[ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="8_t14x3"]
 
 [sub_resource type="TileSet" id="TileSet_1seuy"]
 
@@ -16,7 +13,7 @@
 size = Vector2(1918, 20.901058)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1seuy"]
-texture = ExtResource("1_1seuy")
+texture = ExtResource("2_hadiw")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -429,7 +426,7 @@ sources/0 = SubResource("TileSetAtlasSource_1seuy")
 size = Vector2(169, 20)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8a7m2"]
-texture = ExtResource("1_1seuy")
+texture = ExtResource("2_hadiw")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -845,7 +842,7 @@ size = Vector2(25, 1078)
 size = Vector2(394, 325)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2r1tl"]
-texture = ExtResource("1_1seuy")
+texture = ExtResource("2_hadiw")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -1257,8 +1254,8 @@ sources/0 = SubResource("TileSetAtlasSource_2r1tl")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v38iq"]
 size = Vector2(528.5, 495)
 
-[node name="level1" type="Node2D"]
-script = ExtResource("1_plydf")
+[node name="level3" type="Node2D"]
+script = ExtResource("1_7eb4w")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 scale = Vector2(3.725, 3.725)
@@ -1347,26 +1344,17 @@ scale = Vector2(2.85, 2.85)
 tile_map_data = PackedByteArray("AAD7//v/AAAXAAIAAAD8//v/AAAXAAIAAAD9//v/AAAXAAIAAAD+//v/AAAXAAIAAAD///v/AAAXAAIAAAAAAPv/AAAXAAIAAAABAPv/AAAXAAIAAAACAPv/AAAXAAIAAAADAPv/AAAXAAIAAAAEAPv/AAAXAAIAAAD6//v/AAAVAAEAAAAFAPv/AAAXAAIAAAAFAPz/AAAXAAIAAAAFAP3/AAAXAAIAAAAFAP7/AAAXAAIAAAAFAP//AAAXAAIAAAAFAAAAAAAXAAIAAAAFAAEAAAAXAAIAAAAFAAIAAAAXAAIAAAAFAAMAAAAXAAIAAAD6/wIAAAAVAAQAAAD6/wMAAAAVAAEAAAD7/wIAAAAcABQAAAD7/wMAAAAcABUAAAD8/wIAAAAbABQAAAD8/wMAAAAbABUAAAD9/wIAAAAcABQAAAD9/wMAAAAcABUAAAD+/wAAAAAbABQAAAD+/wEAAAAbABUAAAD//wAAAAAcABQAAAD//wEAAAAcABUAAAAAAAAAAAAdABQAAAAAAAEAAAAdABUAAAABAAAAAAAeABQAAAABAAEAAAAeABUAAAD6/wAAAAAVAAIAAAD6/wEAAAAVAAMAAAD7/wAAAAAXAAEAAAD7/wEAAAAXAAIAAAD8//7/AAAWAAEAAAD8////AAAWAAIAAAD9//7/AAAXAAEAAAD9////AAAXAAIAAAD6//z/AAAVAAIAAAD6//3/AAAVAAMAAAD7//z/AAAXAAEAAAD7//3/AAAXAAIAAAD8//z/AAAWAAEAAAD8//3/AAAWAAIAAAD9//z/AAAXAAEAAAD9//3/AAAXAAIAAAD+//z/AAAWAAEAAAD+//3/AAAWAAIAAAD///z/AAAXAAEAAAD///3/AAAXAAIAAAAAAPz/AAAWAAEAAAAAAP3/AAAWAAIAAAABAPz/AAAXAAEAAAABAP3/AAAXAAIAAAACAPz/AAAWAAEAAAACAP3/AAAWAAIAAAADAPz/AAAWAAEAAAADAP3/AAAWAAIAAAACAP7/AAAWAAEAAAACAP//AAAWAAIAAAADAP7/AAAWAAEAAAADAP//AAAWAAEAAAACAAAAAAAWAAEAAAACAAEAAAAWAAIAAAADAAAAAAAWAAIAAAADAAEAAAAWAAEAAAD+/wIAAAAdABQAAAD+/wMAAAAdABUAAAD//wIAAAAeABQAAAD//wMAAAAeABUAAAD+//7/AAAbABQAAAD+////AAAbABUAAAD///7/AAAcABQAAAD/////AAAcABUAAAAAAP7/AAAdABQAAAAAAP//AAAdABUAAAABAP7/AAAeABQAAAABAP//AAAeABUAAAAAAAIAAAAbABQAAAABAAIAAAAcABQAAAACAAIAAAAdABQAAAADAAIAAAAWAAIAAAAAAAQAAAAbABQAAAABAAQAAAAcABQAAAACAAQAAAAdABQAAAADAAQAAAAWAAIAAAD7/wQAAAAcABQAAAD8/wQAAAAdABQAAAD9/wQAAAAeABQAAAD6//7/AAAVAAQAAAD6////AAAVAAEAAAD7//7/AAAXAAEAAAD7////AAAXAAIAAAD8/wAAAAAWAAEAAAD8/wEAAAAWAAIAAAD9/wAAAAAXAAEAAAD9/wEAAAAXAAIAAAAEAPz/AAAXAAEAAAAEAP3/AAAXAAIAAAAEAP7/AAAXAAEAAAAEAP//AAAXAAEAAAAEAAAAAAAXAAIAAAAEAAEAAAAXAAEAAAAEAAIAAAAXAAIAAAADAAMAAAAWAAEAAAAEAAMAAAAXAAEAAAAEAAQAAAAXAAIAAAABAAMAAAAWAAEAAAACAAMAAAAXAAEAAAD+/wQAAAAWAAEAAAD//wQAAAAXAAEAAAAAAAMAAAAXAAEAAAAFAAQAAAAXAAIAAAD6/wQAAAAVAAIAAAD6//r/AAAVAAAAAAD7//r/AAAXAAAAAAD8//r/AAAYAAAAAAD9//r/AAAZAAAAAAD+//r/AAAWAAAAAAD///r/AAAXAAAAAAAAAPr/AAAYAAAAAAABAPr/AAAZAAAAAAACAPr/AAAWAAAAAAADAPr/AAAXAAAAAAAEAPr/AAAYAAAAAAAFAPr/AAAZAAAAAAA=")
 tile_set = SubResource("TileSet_8a7m2")
 
-[node name="Soul" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
-position = Vector2(1284.205, 544.705)
-
-[node name="Golem" parent="." groups=["enemies"] instance=ExtResource("2_ootpb")]
-position = Vector2(1268, 956)
-
-[node name="Soul2" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
-position = Vector2(198.205, 712)
-
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -4
 position = Vector2(958.99994, 548)
 scale = Vector2(1.1291667, 1.1291667)
-texture = ExtResource("4_bfxgj")
+texture = ExtResource("5_ah4rv")
 
 [node name="BG2" type="Sprite2D" parent="."]
 z_index = -4
 position = Vector2(958.99994, 548)
 scale = Vector2(6.124, 6.124)
-texture = ExtResource("4_1seuy")
+texture = ExtResource("6_522sc")
 
 [node name="ColorRect" type="ColorRect" parent="BG2"]
 offset_left = -154.80078
@@ -1379,7 +1367,7 @@ color = Color(0, 0.29748532, 0.5220287, 0.509)
 z_index = -4
 position = Vector2(959, 548)
 scale = Vector2(6.124001, 6.124001)
-texture = ExtResource("6_2r1tl")
+texture = ExtResource("7_a82vw")
 
 [node name="ColorRect" type="ColorRect" parent="BG3"]
 offset_left = -154.80078
@@ -1393,8 +1381,18 @@ metadata/_edit_use_anchors_ = true
 position = Vector2(962, 569)
 scale = Vector2(1.1291667, 1.1291667)
 
-[node name="Player" parent="." instance=ExtResource("1_ootpb")]
-position = Vector2(469, 648)
+[node name="Player" parent="." instance=ExtResource("8_t14x3")]
+position = Vector2(145, 663)
 
-[node name="Portal" parent="." instance=ExtResource("8_8a7m2")]
-position = Vector2(1866, 512)
+[node name="WaveTimer" type="Timer" parent="."]
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="Marker2D3" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(1565, 578)
+
+[node name="Marker2D" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(659, 1048)
+
+[node name="Marker2D2" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(842, 739)

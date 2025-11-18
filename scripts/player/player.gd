@@ -57,10 +57,14 @@ var saltos_restantes := 1
 @export var max_saltos := 2
 
 
-# --- FUNÇÃO _READY ---
 func _ready() -> void:
-	vida_atual = vida_maxima
+	if Singleton.player_health_run > 0:
+		vida_atual = Singleton.player_health_run
+	else:
+		vida_atual = vida_maxima
+	
 	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima)
+	Singleton.player_health_run = vida_atual
 
 
 # --- NOVA FUNÇÃO DE ATAQUE (Refatorada) ---
@@ -232,6 +236,9 @@ func tomar_dano(dano: int) -> void:
 		return
 
 	vida_atual -= dano
+	
+	Singleton.player_health_run = vida_atual
+	
 	health_changed.emit(vida_atual, vida_maxima)
 	print("Jogador atingido! Vida restante: ", vida_atual)
 	
