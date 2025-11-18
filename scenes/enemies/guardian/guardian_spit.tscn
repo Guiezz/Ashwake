@@ -1,0 +1,61 @@
+[gd_scene load_steps=9 format=3 uid="uid://bx81py5hbjtvj"]
+
+[ext_resource type="Script" uid="uid://fvhmdx67o8ce" path="res://scripts/enemies/bullet.gd" id="1_6n1je"]
+[ext_resource type="Texture2D" uid="uid://civcuithqykag" path="res://assets/sprites/Inimigos/Old_Guardian/Old_Guardian_spit_effect.png" id="2_66um2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqs3w"]
+atlas = ExtResource("2_66um2")
+region = Rect2(0, 0, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i7l00"]
+atlas = ExtResource("2_66um2")
+region = Rect2(0, 120, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_46dhd"]
+atlas = ExtResource("2_66um2")
+region = Rect2(0, 240, 120, 120)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shggg"]
+atlas = ExtResource("2_66um2")
+region = Rect2(0, 360, 120, 120)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6vfq7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqs3w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i7l00")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_46dhd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shggg")
+}],
+"loop": true,
+"name": &"bullet",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oppp3"]
+
+[node name="guardian_spit" type="Area2D" groups=["enemy_projectile", "projeteis"]]
+collision_layer = 8
+collision_mask = 5
+script = ExtResource("1_6n1je")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_6vfq7")
+animation = &"bullet"
+frame_progress = 0.10159257
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 0)
+scale = Vector2(2, 2)
+shape = SubResource("CircleShape2D_oppp3")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+scale = Vector2(2, 2)

@@ -349,7 +349,7 @@ script = ExtResource("1_dovo2")
 position = Vector2(67.58362, 39.15625)
 scale = Vector2(2.7258444, 2.4780405)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"attack01"
+animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(67, 46)

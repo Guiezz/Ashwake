@@ -324,5 +324,25 @@ collision_mask = 4
 [node name="AttackDelayTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="BloodParticles" type="CPUParticles2D" parent="."]
+z_index = -1
+position = Vector2(2.175, -15.49)
+rotation = -0.4712389
+emitting = false
+amount = 20
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.9
+randomness = 1.0
+emission_shape = 4
+emission_points = PackedVector2Array()
+emission_colors = PackedColorArray()
+spread = 16.85
+initial_velocity_min = 82.48
+initial_velocity_max = 597.94
+scale_amount_min = 9.0
+scale_amount_max = 9.0
+color = Color(0.6859857, 0, 0.16454032, 1)
+
 [connection signal="body_entered" from="AnimatedSprite2D/AttackHitbox" to="." method="_on_attack_hitbox_body_entered"]
 [connection signal="timeout" from="AttackDelayTimer" to="." method="_on_attack_delay_timer_timeout"]

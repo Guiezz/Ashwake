@@ -1345,6 +1345,7 @@ tile_map_data = PackedByteArray("AAD7//v/AAAXAAIAAAD8//v/AAAXAAIAAAD9//v/AAAXAAI
 tile_set = SubResource("TileSet_8a7m2")
 
 [node name="Soul" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
+visible = false
 position = Vector2(1284.205, 544.705)
 
 [node name="Golem" parent="." groups=["enemies"] instance=ExtResource("2_ootpb")]
