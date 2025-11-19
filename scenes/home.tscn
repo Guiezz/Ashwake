@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dlbcmpmuppppj" path="res://assets/sprites/homeScene/IntExtTileset_v1.png" id="3_uhids"]
 [ext_resource type="Texture2D" uid="uid://gqgbymweuhpd" path="res://assets/sprites/homeScene/WindowDoor Tiles Small.PNG" id="3_w18ys"]
 [ext_resource type="Texture2D" uid="uid://dvexeuhym5x6p" path="res://assets/sprites/homeScene/Doors_v1.png" id="4_uhids"]
-[ext_resource type="PackedScene" uid="uid://cvjbwqfw67l16" path="res://scenes/boss/Boss.tscn" id="8_4fycn"]
+[ext_resource type="PackedScene" uid="uid://cyyx2ujtv1r3c" path="res://scenes/boss/BossDemon.tscn" id="8_4fycn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uhids"]
 texture = ExtResource("1_reixx")
@@ -540,8 +540,8 @@ tile_set = SubResource("TileSet_uhids")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(894, 541)
 
-[node name="Boss" parent="." instance=ExtResource("8_4fycn")]
-position = Vector2(480, 955)
+[node name="BossDemon" parent="." instance=ExtResource("8_4fycn")]
+position = Vector2(533, 824)
 
 [connection signal="body_entered" from="PortaA" to="PortaA" method="_on_body_entered"]
 [connection signal="body_exited" from="PortaA" to="PortaA" method="_on_body_exited"]
