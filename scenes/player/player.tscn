@@ -399,6 +399,7 @@ one_shot = true
 one_shot = true
 
 [node name="LevelUpUI" parent="." instance=ExtResource("57_uygh0")]
+visible = false
 
 [node name="player_ui" parent="." instance=ExtResource("58_t1aof")]
 

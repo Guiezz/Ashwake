@@ -15,7 +15,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lgp48"]
 size = Vector2(1918, 20.901058)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1seuy"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_plydf"]
 texture = ExtResource("1_1seuy")
 0:0/0 = 0
 1:0/0 = 0
@@ -423,12 +423,12 @@ texture = ExtResource("1_1seuy")
 30:21/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_2r1tl"]
-sources/0 = SubResource("TileSetAtlasSource_1seuy")
+sources/0 = SubResource("TileSetAtlasSource_plydf")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jwv3a"]
 size = Vector2(169, 20)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8a7m2"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5ntmo"]
 texture = ExtResource("1_1seuy")
 0:0/0 = 0
 1:0/0 = 0
@@ -836,7 +836,7 @@ texture = ExtResource("1_1seuy")
 30:21/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_plydf"]
-sources/0 = SubResource("TileSetAtlasSource_8a7m2")
+sources/0 = SubResource("TileSetAtlasSource_5ntmo")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dopym"]
 size = Vector2(25, 1078)
@@ -844,7 +844,7 @@ size = Vector2(25, 1078)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ootpb"]
 size = Vector2(394, 325)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2r1tl"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nkeig"]
 texture = ExtResource("1_1seuy")
 0:0/0 = 0
 1:0/0 = 0
@@ -1252,7 +1252,7 @@ texture = ExtResource("1_1seuy")
 30:21/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_8a7m2"]
-sources/0 = SubResource("TileSetAtlasSource_2r1tl")
+sources/0 = SubResource("TileSetAtlasSource_nkeig")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v38iq"]
 size = Vector2(528.5, 495)
