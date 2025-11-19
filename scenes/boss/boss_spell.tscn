@@ -1,0 +1,94 @@
+[gd_scene load_steps=20 format=3 uid="uid://dbp60ptoyj814"]
+
+[ext_resource type="Script" uid="uid://bbwxtosdgo648" path="res://scripts/boss/boss_spell.gd" id="1_ulpas"]
+[ext_resource type="Texture2D" uid="uid://deucst2lvfwac" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_1.png" id="2_mh7va"]
+[ext_resource type="Texture2D" uid="uid://bu1osme20ng8i" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_2.png" id="3_8npnw"]
+[ext_resource type="Texture2D" uid="uid://dbsar7qcrravr" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_3.png" id="4_2yj4b"]
+[ext_resource type="Texture2D" uid="uid://b40a3qh1k1wsl" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_4.png" id="5_a17pa"]
+[ext_resource type="Texture2D" uid="uid://jt27eehad37c" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_5.png" id="6_2bk1s"]
+[ext_resource type="Texture2D" uid="uid://des53yna4klhv" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_6.png" id="7_2nock"]
+[ext_resource type="Texture2D" uid="uid://cfmrjqwt6h0kt" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_7.png" id="8_6kv84"]
+[ext_resource type="Texture2D" uid="uid://rjkkkidm762e" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_8.png" id="9_khoro"]
+[ext_resource type="Texture2D" uid="uid://bt07aupdujcl2" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_9.png" id="10_q3bgj"]
+[ext_resource type="Texture2D" uid="uid://bxtgpmticwkec" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_10.png" id="11_826nd"]
+[ext_resource type="Texture2D" uid="uid://dkjm4wk6ojfe" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_11.png" id="12_8v2e2"]
+[ext_resource type="Texture2D" uid="uid://bp17sr5ykijsd" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_12.png" id="13_kb86e"]
+[ext_resource type="Texture2D" uid="uid://dle00tcyb2qa6" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_13.png" id="14_hobl3"]
+[ext_resource type="Texture2D" uid="uid://d17u4qibe1ofu" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_14.png" id="15_f7m1m"]
+[ext_resource type="Texture2D" uid="uid://dw24g747r3ynd" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_15.png" id="16_k7q41"]
+[ext_resource type="Texture2D" uid="uid://6p5pbjoudx3i" path="res://assets/sprites/boss/Spell/Bringer-of-Death_Spell_16.png" id="17_74oiq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8jvvd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_mh7va")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8npnw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_2yj4b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_a17pa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2bk1s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_2nock")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_6kv84")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_khoro")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_q3bgj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_826nd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_8v2e2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_kb86e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_hobl3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_f7m1m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_k7q41")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_74oiq")
+}],
+"loop": false,
+"name": &"Spell",
+"speed": 15.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ulpas"]
+size = Vector2(61, 112)
+
+[node name="BossSpell" type="Area2D" groups=["projeteis"]]
+script = ExtResource("1_ulpas")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.8, 1.8)
+sprite_frames = SubResource("SpriteFrames_8jvvd")
+animation = &"Spell"
+frame = 15
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-7.5, 26)
+shape = SubResource("RectangleShape2D_ulpas")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
