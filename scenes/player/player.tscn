@@ -331,7 +331,7 @@ radius = 25.0
 height = 78.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_je7p5"]
-size = Vector2(71, 43)
+size = Vector2(71, 58)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gx1jg"]
 size = Vector2(71, 55)
@@ -373,7 +373,7 @@ monitoring = false
 monitorable = false
 
 [node name="GroundShape" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(54.5, 25.5)
+position = Vector2(54.5, 18)
 shape = SubResource("RectangleShape2D_je7p5")
 
 [node name="AirShape" type="CollisionShape2D" parent="Hitbox"]
