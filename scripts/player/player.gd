@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+signal health_changed(nova_vida, vida_maxima)
+
 # --- VARIÁVEIS DE VIDA E DANO ---
 @export var vida_maxima: int = 5
 var vida_atual: int
@@ -13,6 +15,7 @@ var esta_morto := false
 @export var gravidade := 1200.0
 @export var desaceleracao := 1000.0
 @export var gravidade_ataque_aereo_mult := 0.8
+@export var dano_ataque: int = 1
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
@@ -54,9 +57,27 @@ var proximo_ataque_solicitado := false # <--- NOVO: Buffer de input
 var saltos_restantes := 1
 @export var max_saltos := 2
 
-# --- FUNÇÃO _READY ---
+
 func _ready() -> void:
-	vida_atual = vida_maxima
+	# --- LÓGICA DE CARREGAR VIDA MÁXIMA ---
+	if Singleton.player_max_health_run > 0:
+		vida_maxima = Singleton.player_max_health_run
+	else:
+		# Se for a primeira vez (valor 0), usa o padrão do Inspector e salva
+		Singleton.player_max_health_run = vida_maxima
+	
+	if Singleton.player_damage_run > 0:
+		dano_ataque = Singleton.player_damage_run
+	else:
+		Singleton.player_damage_run = dano_ataque # Salva o padrão (1)
+
+	# --- LÓGICA DE CARREGAR VIDA ATUAL (Já existia, mas ajustada) ---
+	if Singleton.player_health_run > 0:
+		vida_atual = Singleton.player_health_run
+	else:
+		vida_atual = vida_maxima
+	
+	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima)
 
 
 # --- NOVA FUNÇÃO DE ATAQUE (Refatorada) ---
@@ -228,6 +249,10 @@ func tomar_dano(dano: int) -> void:
 		return
 
 	vida_atual -= dano
+	
+	Singleton.player_health_run = vida_atual
+	
+	health_changed.emit(vida_atual, vida_maxima)
 	print("Jogador atingido! Vida restante: ", vida_atual)
 	
 	esta_invencivel = true
@@ -254,11 +279,12 @@ func morrer() -> void:
 	
 	await animacao.animation_finished
 	
+	Singleton.reset_run_stats()
+	
 	get_tree().change_scene_to_file("res://scenes/home.tscn")
 	
 func reviver() -> void:
 	print("Revivendo...")
-	# Recarrega a cena 'playground'
 	get_tree().reload_current_scene() 
 
 func _on_invencibilidade_timer_timeout():
@@ -359,8 +385,9 @@ func _on_combo_window_timer_timeout():
 	
 	
 func _on_hitbox_body_entered(body: Node2D) -> void:
+	# Agora passamos o 'dano_ataque' para o inimigo!
 	if body.has_method("ser_atingido"):
-		body.ser_atingido()
+		body.ser_atingido(dano_ataque)
 	
 func _on_animacao_animation_finished() -> void:
 	if animacao.animation == "wallSick":
@@ -427,3 +454,66 @@ func atualizar_animacoes(direcao: float) -> void:
 		animacao.play("run")
 	else:
 		animacao.play("idle")
+		
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	# Verifica se o objeto que a espada tocou tem a função 'rebater'
+	if area.has_method("rebater"):
+		
+		# Calcula a direção do rebatedor (para frente do player)
+		var direcao_rebate = Vector2.RIGHT
+		if animacao.flip_h:
+			direcao_rebate = Vector2.LEFT
+			
+		# Executa o parry
+		area.rebater(direcao_rebate)
+		
+		# (Opcional) Efeito de "Time Stop" para dar impacto (Game Juice!)
+		efeito_parry()
+
+func efeito_parry():
+	# Congela o jogo por uma fração de segundo
+	var time_scale_original = Engine.time_scale
+	Engine.time_scale = 0.05
+	await get_tree().create_timer(0.05 * 0.05).timeout # Espera em tempo real reduzido
+	Engine.time_scale = time_scale_original
+	
+# --- NOVAS FUNÇÕES DE CURA E UPGRADE ---
+
+func curar(quantidade: int) -> void:
+	if vida_atual >= vida_maxima:
+		return # Já está cheio
+		
+	vida_atual += quantidade
+	
+	# Garante que não ultrapasse o máximo
+	if vida_atual > vida_maxima:
+		vida_atual = vida_maxima
+		
+	# Atualiza o Singleton e a UI
+	Singleton.player_health_run = vida_atual
+	health_changed.emit(vida_atual, vida_maxima)
+	
+	print("Player curado! Vida: ", vida_atual)
+	
+	# Feedback visual (piscar verde)
+	modulate = Color.GREEN
+	await get_tree().create_timer(0.2).timeout
+	modulate = Color.WHITE
+
+func aumentar_vida_maxima(quantidade: int) -> void:
+	vida_maxima += quantidade
+	vida_atual += quantidade
+	
+	# --- SALVANDO NO SINGLETON ---
+	Singleton.player_health_run = vida_atual      # Salva a vida atual nova
+	Singleton.player_max_health_run = vida_maxima # <--- O SEGREDO ESTÁ AQUI!
+	
+	health_changed.emit(vida_atual, vida_maxima)
+	print("Vida Máxima Aumentada e SALVA! Novo Max: ", vida_maxima)
+
+# Adicione junto com as funções curar() e aumentar_vida_maxima()
+
+func aumentar_dano(quantidade: int) -> void:
+	dano_ataque += quantidade
+	Singleton.player_damage_run = dano_ataque # Salva na memória global
+	print("FORÇA BRUTA! Novo Dano: ", dano_ataque)

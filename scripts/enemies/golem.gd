@@ -8,6 +8,8 @@ var current_state = State.PATROL
 @export var vida_maxima: int = 5
 var vida_atual: int
 
+@export var xp_value: int = 10 # Golems valem mais XP
+
 # --- FÍSICA E IA ---
 var gravidade: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var velocidade: float = 100.0
@@ -23,6 +25,11 @@ var time_stuck: float = 0.0
 @export var flip_cooldown: float = 0.3  # evita flips muito rápidos repetidos
 var flip_cooldown_timer: float = 0.0
 
+# --- KNOCKBACK E STUN ---
+@export var knockback_force: float = 250.0
+@export var hit_stun_time: float = 0.3
+var knockback_timer: float = 0.0
+
 # Referência para o jogador
 var player_ref: Node2D = null
 
@@ -34,6 +41,7 @@ var player_ref: Node2D = null
 @onready var collision_shape := $CollisionShape2D
 @onready var attack_hitbox := $AnimatedSprite2D/AttackHitbox 
 @onready var attack_delay_timer := $AttackDelayTimer
+@onready var blood_particles := $BloodParticles # adicione este nó na cena!
 
 func _ready() -> void:
 	vida_atual = vida_maxima
@@ -50,8 +58,25 @@ func _physics_process(delta: float) -> void:
 	if current_state != State.DEAD and not is_on_floor():
 		velocity.y += gravidade * delta
 
-	processar_ia(delta)
+	# --- PROCESSAMENTO DO KNOCKBACK ---
+	if current_state == State.HIT:
+		_processar_knockback(delta)
+	else:
+		processar_ia(delta)
+
 	move_and_slide()
+
+# --- PROCESSAMENTO DE KNOCKBACK ---
+func _processar_knockback(delta: float) -> void:
+	knockback_timer -= delta
+	if knockback_timer <= 0.0:
+		if vida_atual <= 0:
+			morrer()
+		else:
+			current_state = State.PATROL
+	else:
+		# reduz gradualmente o movimento horizontal (efeito natural)
+		velocity.x = lerp(velocity.x, 0.0, delta * 5.0)
 
 # --- LÓGICA DE IA (MÁQUINA DE ESTADOS) ---
 func processar_ia(delta: float) -> void:
@@ -78,7 +103,6 @@ func processar_ia(delta: float) -> void:
 				last_position = global_position
 
 			# --- 2) Detecção de parede: se estiver encostado na parede, vira (imediato, com cooldown) ---
-			# Usa is_on_wall() da CharacterBody2D (mais confiável para "encostado")
 			if is_on_wall() and flip_cooldown_timer <= 0.0:
 				patrol_direction *= -1
 				flip_cooldown_timer = flip_cooldown
@@ -92,7 +116,6 @@ func processar_ia(delta: float) -> void:
 			sprite.flip_h = (patrol_direction > 0)
 			var dir_local = 1 if not sprite.flip_h else -1
 			attack_hitbox.scale.x = dir_local
-			# Protege contra posições negativas/zero e aplica direção
 			wall_detector.target_position.x = abs(wall_detector.target_position.x) * dir_local
 			gap_detector.target_position.x = abs(gap_detector.target_position.x) * dir_local
 
@@ -158,18 +181,39 @@ func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 			body.tomar_dano(1)
 
 # --- DANO E MORTE ---
-func ser_atingido() -> void:
+func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state == State.HIT or current_state == State.DEAD:
 		return
 
-	vida_atual -= 1
+	vida_atual -= dano
 	print("Golem atingido! Vida restante: ", vida_atual)
 
-	if vida_atual <= 0:
-		morrer()
+	# --- Partículas de sangue ---
+	if blood_particles:
+		blood_particles.global_position = global_position
+		blood_particles.emitting = false
+		blood_particles.restart()
+		blood_particles.emitting = true
+
+	# --- Knockback ---
+	var direcao_knockback = 0
+	if origem != Vector2.ZERO:
+		direcao_knockback = sign(global_position.x - origem.x)
 	else:
-		current_state = State.HIT
-		sprite.play("hit")
+		direcao_knockback = -patrol_direction
+
+	velocity.x = direcao_knockback * knockback_force
+	velocity.y = -abs(forca_pulo * 0.2)
+	knockback_timer = hit_stun_time
+
+	# --- Estado HIT ---
+	current_state = State.HIT
+	sprite.play("hit")
+
+	# --- Flash visual opcional ---
+	sprite.modulate = Color(1, 0.5, 0.5)
+	await get_tree().create_timer(0.1).timeout
+	sprite.modulate = Color(1, 1, 1)
 
 func morrer() -> void:
 	if current_state == State.DEAD:
@@ -177,6 +221,9 @@ func morrer() -> void:
 		
 	print("Golem derrotado!")
 	current_state = State.DEAD
+	
+	Singleton.add_xp_to_run(xp_value)
+	
 	collision_shape.set_deferred("disabled", true)
 	detection_range.set_deferred("monitoring", false)
 	sprite.play("death")
@@ -193,11 +240,9 @@ func _desativar_hitbox_ataque() -> void:
 func _on_animation_finished() -> void:
 	if sprite.animation == "death":
 		queue_free()
-	
 	elif sprite.animation == "attack":
 		attack_hitbox.set_deferred("monitoring", false)
 		current_state = State.PATROL
-	
 	elif sprite.animation == "hit":
 		current_state = State.PATROL
 

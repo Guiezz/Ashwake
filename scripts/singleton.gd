@@ -1,5 +1,8 @@
 extends Node
 
+signal xp_updated(current, next_level)
+signal enemy_count_updated(count)
+
 ## --- Game State Variables ---
 var enemy_count: Array[Node] = []    # List of active enemy nodes
 var enemy_label: Label = null        # Reference to the UI label showing the enemy count
@@ -10,9 +13,33 @@ var game_started := false
 # --- Completed Levels Tracking ---
 var completed_levels: Array[String] = []  # Armazena os nomes das fases completadas
 
+# --- VARIÁVEIS PERMANENTES DE XP E NÍVEL ---
+var current_xp: int = 0
+var xp_to_next_level: int = 10 # O jogador começa precisando de 10 XP
+var current_level: int = 1
+var player_max_health_run: int = 0
+var run_xp: int = 0 # Acumulador de XP ganho (para salvar no final)
+
+
+# --- NOVAS VARIÁVEIS DE ESTADO DA RUN ---
+# Estas rastreiam o estado *durante* a fase (temporário)
+var run_current_xp: int = 0
+var run_xp_to_next: int = 0
+var run_level: int = 0
+
+var player_health_run: int = -1 # Começa -1 para indicar que não foi definida
+var player_damage_run: int = 0
+
+
+# --- SINAL DE LEVEL UP ---
+# Emitido quando o jogador sobe de nível (mesmo que temporariamente)
+signal player_leveled_up(new_level)
+
 
 func _ready() -> void:
 	call_deferred("_init_after_ready")
+	
+	reset_run_stats()
 
 
 func _init_after_ready() -> void:
@@ -37,7 +64,11 @@ func _refresh_scene_data() -> void:
 		returning_home = false
 		game_started = false
 		return
-
+	
+	# --- CORREÇÃO DE BUG ---
+	# Removemos o reset de XP daqui para não resetar
+	# toda vez que a cena é carregada.
+	
 	if not game_started:
 		game_started = true
 
@@ -53,6 +84,7 @@ func _refresh_scene_data() -> void:
 
 
 func update_enemy_label() -> void:
+	enemy_count_updated.emit(enemy_count.size())
 	if enemy_label != null:
 		enemy_label.text = "Enemies: %d" % enemy_count.size()
 
@@ -61,11 +93,11 @@ func update_enemy_label() -> void:
 		# Marca a fase como completada
 		_mark_level_completed(get_tree().current_scene.name)
 
-	if game_started and enemy_count.size() == 0 and get_tree().current_scene.name != "home" and returning_home:
-		returning_home = false
-		print("All enemies defeated — returning to home scene...")
-		await get_tree().create_timer(0.5).timeout
-		get_tree().change_scene_to_file("res://scenes/home.tscn")
+	#if game_started and enemy_count.size() == 0 and get_tree().current_scene.name != "home" and returning_home:
+	#	returning_home = false
+	#	print("All enemies defeated — returning to home scene...")
+	#	await get_tree().create_timer(0.5).timeout
+	#	get_tree().change_scene_to_file("res://scenes/home.tscn")
 
 
 func on_enemy_removed(enemy: CharacterBody2D) -> void:
@@ -80,3 +112,61 @@ func _mark_level_completed(level_name: String) -> void:
 		return
 	completed_levels.append(level_name)
 	print("Level completed:", level_name)
+
+	print("Salvando XP da run: ", run_xp)
+	
+	# --- FUNÇÕES ATUALIZADAS ---
+	# 1. Salva o estado atual da run como permanente
+	permanent_save_xp()
+		
+	# 2. Reseta os stats da run de volta ao estado (agora salvo)
+	#reset_run_stats()
+	
+
+# --- FUNÇÃO ATUALIZADA ---
+# Salva o estado ATUAL da run como o novo estado PERMANENTE
+func permanent_save_xp() -> void:
+	current_xp = run_current_xp
+	xp_to_next_level = run_xp_to_next
+	current_level = run_level
+	
+	print("--- STATS PERMANENTES SALVOS ---")
+	print("Nível: ", current_level, " | XP: ", current_xp, "/", xp_to_next_level)
+
+
+# --- FUNÇÃO ATUALIZADA (LÓGICA PRINCIPAL) ---
+func add_xp_to_run(amount: int) -> void:
+	run_xp += amount 
+	run_current_xp += amount
+	
+	xp_updated.emit(run_current_xp, run_xp_to_next)
+
+	print("XP ganho: ", amount, " | XP da Run: ", run_current_xp, "/", run_xp_to_next)
+
+	while run_current_xp >= run_xp_to_next:
+		run_level += 1
+		run_current_xp -= run_xp_to_next
+		run_xp_to_next = int(run_xp_to_next * 1.5)
+		player_leveled_up.emit(run_level)
+		xp_updated.emit(run_current_xp, run_xp_to_next)
+		print("LEVEL UP (Temporário)! Nível: ", run_level, " | XP Atual: ", run_current_xp, " | Próximo em: ", run_xp_to_next, " XP")
+
+
+# --- FUNÇÃO ATUALIZADA E RENOMEADA ---
+# Esta função reseta os stats temporários da run para os permanentes.
+# É chamada no início do jogo, ao morrer, ou ao completar uma fase.
+func reset_run_stats() -> void:
+	run_xp = 0
+	
+	completed_levels.clear() 
+	player_health_run = -1
+	player_max_health_run = 0 
+	player_damage_run = 0
+	
+	run_current_xp = current_xp
+	run_xp_to_next = xp_to_next_level
+	run_level = current_level
+	
+	xp_updated.emit(run_current_xp, run_xp_to_next)
+	
+	print("Stats da run e Fases resetados.")

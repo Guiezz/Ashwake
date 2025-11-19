@@ -8,6 +8,8 @@ var current_state = State.PATROL
 @export var vida_maxima: int = 5
 var vida_atual: int
 
+@export var xp_value: int = 8 # Skeletons valem 8 XP
+
 # --- FÍSICA E IA ---
 var gravidade: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 @export var velocidade: float = 100.0
@@ -146,11 +148,22 @@ func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 			body.tomar_dano(1)
 
 # --- DANO ---
-func ser_atingido() -> void:
+# --- DANO CORRIGIDO ---
+# Agora aceita 'dano' e 'origem', com valores padrão caso não sejam informados
+func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state in [State.HIT, State.DEAD]:
 		return
 
-	vida_atual -= 1
+	vida_atual -= dano
+	print("Skeleton atingido! Vida restante: ", vida_atual)
+	
+	# --- Adicionando Knockback (Empurrão) ---
+	if origem != Vector2.ZERO:
+		# Empurra o inimigo para o lado oposto de onde veio o tiro
+		var direcao_knockback = sign(global_position.x - origem.x)
+		velocity.x = direcao_knockback * 100.0 
+		velocity.y = -150.0 # Um pulinho para dar impacto
+
 	if vida_atual <= 0:
 		morrer()
 	else:
@@ -161,7 +174,11 @@ func morrer() -> void:
 	if current_state == State.DEAD:
 		return
 
+	print("Skeleton derrotado!") 
 	current_state = State.DEAD
+	
+	Singleton.add_xp_to_run(xp_value)
+	
 	collision_shape.set_deferred("disabled", true)
 	detection_range.set_deferred("monitoring", false)
 	sprite.play("death")

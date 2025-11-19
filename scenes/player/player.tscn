@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://dtjporv7xvfnn"]
+[gd_scene load_steps=64 format=3 uid="uid://dtjporv7xvfnn"]
 
 [ext_resource type="Script" uid="uid://cxmuybsajhqdw" path="res://scripts/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://tv3a76203m5m" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-attack2-00.png" id="2_cnsyf"]
@@ -56,6 +56,8 @@
 [ext_resource type="Texture2D" uid="uid://bs2502dfhvvbm" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-run-05.png" id="46_ymths"]
 [ext_resource type="Texture2D" uid="uid://fkm5sq170cra" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-00.png" id="47_3p0jd"]
 [ext_resource type="Texture2D" uid="uid://d1bvwi34ausgy" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-01.png" id="48_7nf13"]
+[ext_resource type="PackedScene" uid="uid://ca78hj6p817ud" path="res://scenes/levels/level_up_ui.tscn" id="57_uygh0"]
+[ext_resource type="PackedScene" uid="uid://bmuq4rcrr835e" path="res://scenes/player/player_ui.tscn" id="58_t1aof"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4sw5w"]
 animations = [{
@@ -288,7 +290,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
-"speed": 7.0
+"speed": 11.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -329,7 +331,7 @@ radius = 25.0
 height = 78.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_je7p5"]
-size = Vector2(71, 43)
+size = Vector2(71, 58)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gx1jg"]
 size = Vector2(71, 55)
@@ -342,12 +344,13 @@ height = 78.0
 collision_layer = 5
 collision_mask = 4
 script = ExtResource("1_dovo2")
+vida_maxima = 6
 
 [node name="Animacao" type="AnimatedSprite2D" parent="."]
 position = Vector2(67.58362, 39.15625)
 scale = Vector2(2.7258444, 2.4780405)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"attack01"
+animation = &"run"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(67, 46)
@@ -358,17 +361,19 @@ wait_time = 0.2
 one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(97, -176)
+position = Vector2(97, -114)
+enabled = false
+zoom = Vector2(1.38, 1.38)
 
 [node name="Hitbox" type="Area2D" parent="."]
 position = Vector2(51, 28)
 collision_layer = 0
-collision_mask = 2
+collision_mask = 10
 monitoring = false
 monitorable = false
 
 [node name="GroundShape" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(54.5, 25.5)
+position = Vector2(54.5, 18)
 shape = SubResource("RectangleShape2D_je7p5")
 
 [node name="AirShape" type="CollisionShape2D" parent="Hitbox"]
@@ -394,15 +399,14 @@ one_shot = true
 [node name="ComboWindowTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="EnemyCount" type="Label" parent="."]
-offset_left = 62.0
-offset_top = -17.0
-offset_right = 102.0
-offset_bottom = 6.0
-text = "0"
+[node name="LevelUpUI" parent="." instance=ExtResource("57_uygh0")]
+visible = false
+
+[node name="player_ui" parent="." instance=ExtResource("58_t1aof")]
 
 [connection signal="animation_finished" from="Animacao" to="." method="_on_animacao_animation_finished"]
 [connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="timeout" from="AttackHitboxTimer" to="." method="_on_attack_hitbox_timer_timeout"]
 [connection signal="timeout" from="AttackDurationTimer" to="." method="_on_attack_duration_timer_timeout"]
