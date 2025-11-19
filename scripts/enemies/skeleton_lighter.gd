@@ -148,11 +148,22 @@ func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 			body.tomar_dano(1)
 
 # --- DANO ---
-func ser_atingido() -> void:
+# --- DANO CORRIGIDO ---
+# Agora aceita 'dano' e 'origem', com valores padrão caso não sejam informados
+func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state in [State.HIT, State.DEAD]:
 		return
 
-	vida_atual -= 1
+	vida_atual -= dano
+	print("Skeleton atingido! Vida restante: ", vida_atual)
+	
+	# --- Adicionando Knockback (Empurrão) ---
+	if origem != Vector2.ZERO:
+		# Empurra o inimigo para o lado oposto de onde veio o tiro
+		var direcao_knockback = sign(global_position.x - origem.x)
+		velocity.x = direcao_knockback * 100.0 
+		velocity.y = -150.0 # Um pulinho para dar impacto
+
 	if vida_atual <= 0:
 		morrer()
 	else:

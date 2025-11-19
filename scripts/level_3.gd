@@ -4,6 +4,9 @@ extends Node2D
 @export var tempo_entre_ondas: float = 4.0
 @export var maximo_inimigos_vivos: int = 6 
 
+@onready var boss_ui = $BossUI # O nó da UI que você acabou de adicionar
+@onready var boss = $BossDemon # O nó do Boss na cena (verifique o nome exato!)
+
 # Carregue as cenas dos inimigos
 # É melhor usar 'const' aqui para preloads, ou manter var.
 const INIMIGO_SOUL = preload("res://scenes/enemies/soul/soul.tscn")
@@ -14,8 +17,7 @@ const INIMIGO_SKELETON = preload("res://scenes/enemies/skeleton_lighter.tscn")
 # --- CORREÇÃO AQUI ---
 # Usamos @onready para montar a lista quando o jogo começar
 @onready var lista_inimigos = [
-	INIMIGO_SOUL, 
-	INIMIGO_SOUL, # Soul aparece mais vezes (2x chance)
+	INIMIGO_SOUL,  # Soul aparece mais vezes (2x chance)
 	INIMIGO_SKELETON, 
 	INIMIGO_GUARDIAN
 ]
@@ -26,14 +28,21 @@ const INIMIGO_SKELETON = preload("res://scenes/enemies/skeleton_lighter.tscn")
 
 func _ready() -> void:
 	# Configura o timer
+	
 	if wave_timer:
 		wave_timer.wait_time = tempo_entre_ondas
 		# Se não conectou pelo editor, conecte via código:
 		if not wave_timer.timeout.is_connected(_on_wave_timer_timeout):
 			wave_timer.timeout.connect(_on_wave_timer_timeout)
 		wave_timer.start()
+		
 	
 	print("Começando a invocação da horda!")
+	
+	if boss and boss_ui:
+		boss_ui.initialize(boss)
+	elif not boss:
+		print("AVISO: Boss não encontrado na cena Level 3 para conectar a UI.")
 
 func _on_wave_timer_timeout() -> void:
 	spawnar_onda()

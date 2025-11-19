@@ -58,13 +58,20 @@ var saltos_restantes := 1
 
 
 func _ready() -> void:
+	# --- LÓGICA DE CARREGAR VIDA MÁXIMA ---
+	if Singleton.player_max_health_run > 0:
+		vida_maxima = Singleton.player_max_health_run
+	else:
+		# Se for a primeira vez (valor 0), usa o padrão do Inspector e salva
+		Singleton.player_max_health_run = vida_maxima
+
+	# --- LÓGICA DE CARREGAR VIDA ATUAL (Já existia, mas ajustada) ---
 	if Singleton.player_health_run > 0:
 		vida_atual = Singleton.player_health_run
 	else:
 		vida_atual = vida_maxima
 	
 	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima)
-	Singleton.player_health_run = vida_atual
 
 
 # --- NOVA FUNÇÃO DE ATAQUE (Refatorada) ---
@@ -462,3 +469,37 @@ func efeito_parry():
 	Engine.time_scale = 0.05
 	await get_tree().create_timer(0.05 * 0.05).timeout # Espera em tempo real reduzido
 	Engine.time_scale = time_scale_original
+	
+# --- NOVAS FUNÇÕES DE CURA E UPGRADE ---
+
+func curar(quantidade: int) -> void:
+	if vida_atual >= vida_maxima:
+		return # Já está cheio
+		
+	vida_atual += quantidade
+	
+	# Garante que não ultrapasse o máximo
+	if vida_atual > vida_maxima:
+		vida_atual = vida_maxima
+		
+	# Atualiza o Singleton e a UI
+	Singleton.player_health_run = vida_atual
+	health_changed.emit(vida_atual, vida_maxima)
+	
+	print("Player curado! Vida: ", vida_atual)
+	
+	# Feedback visual (piscar verde)
+	modulate = Color.GREEN
+	await get_tree().create_timer(0.2).timeout
+	modulate = Color.WHITE
+
+func aumentar_vida_maxima(quantidade: int) -> void:
+	vida_maxima += quantidade
+	vida_atual += quantidade
+	
+	# --- SALVANDO NO SINGLETON ---
+	Singleton.player_health_run = vida_atual      # Salva a vida atual nova
+	Singleton.player_max_health_run = vida_maxima # <--- O SEGREDO ESTÁ AQUI!
+	
+	health_changed.emit(vida_atual, vida_maxima)
+	print("Vida Máxima Aumentada e SALVA! Novo Max: ", vida_maxima)

@@ -136,12 +136,27 @@ func _iniciar_ataque() -> void:
 		attack_hitbox.monitoring = false
 
 # --- RECEBER DANO ---
-func ser_atingido(dano: int = 1) -> void:
+func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state == State.DEAD: return
 
 	vida_atual -= dano
+	
+	# Emite o sinal para a barra de vida atualizar
 	health_changed.emit(vida_atual, vida_maxima)
+	
 	print("Boss tomou dano! Vida: ", vida_atual)
+
+	if vida_atual <= 0:
+		morrer()
+	else:
+		# Flash vermelho para feedback visual
+		sprite.modulate = Color(1, 0.3, 0.3)
+		await get_tree().create_timer(0.1).timeout
+		sprite.modulate = Color.WHITE
+		
+		# Bosses geralmente não sofrem knockback (empurrão),
+		# então ignoramos o argumento 'origem' aqui, mas ele precisa
+		# existir na função para o jogo não travar.
 
 	if vida_atual <= 0:
 		morrer()

@@ -1,8 +1,7 @@
-[gd_scene load_steps=27 format=4 uid="uid://bremupbl61my8"]
+[gd_scene load_steps=26 format=4 uid="uid://bremupbl61my8"]
 
 [ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="1_71baw"]
 [ext_resource type="Script" uid="uid://bibvmt1asauhx" path="res://scripts/level_2.gd" id="1_d5djh"]
-[ext_resource type="PackedScene" uid="uid://5ao1j2ur88b6" path="res://scenes/enemies/soul/soul.tscn" id="2_niitk"]
 [ext_resource type="PackedScene" uid="uid://cjlddcene7rlp" path="res://scenes/levels/portal.tscn" id="4_niitk"]
 [ext_resource type="Texture2D" uid="uid://cbpfic6cftgkv" path="res://assets/sprites/oak_woods_v1.0/oak_woods_tileset.png" id="6_b0vvs"]
 [ext_resource type="Texture2D" uid="uid://bot85npq1pvar" path="res://assets/sprites/homeScene/Free-Sky-with-Clouds-Background-Pixel-Art4.jpg" id="7_oyk6k"]
@@ -1327,10 +1326,6 @@ shape = SubResource("RectangleShape2D_v38iq")
 [node name="Player" parent="." instance=ExtResource("1_71baw")]
 position = Vector2(54, 662)
 
-[node name="Portal" parent="." instance=ExtResource("4_niitk")]
-position = Vector2(1865, 677)
-proxima_cena = "uid://d26bjf537uopw"
-
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 scale = Vector2(3.725, 3.725)
 tile_set = SubResource("TileSet_hgky1")
@@ -1435,17 +1430,12 @@ offset_bottom = 84.258675
 color = Color(0, 0.21434122, 0.38522828, 0.36862746)
 metadata/_edit_use_anchors_ = true
 
-[node name="Portal2" parent="." instance=ExtResource("4_niitk")]
-position = Vector2(1871, 533)
-
-[node name="Soul" parent="." instance=ExtResource("2_niitk")]
-position = Vector2(1237, 523)
-
 [node name="SkeletonLighter" parent="." instance=ExtResource("9_oyk6k")]
 position = Vector2(957, 567)
 
-[node name="Soul2" parent="." instance=ExtResource("2_niitk")]
-position = Vector2(559, 404)
-
 [node name="Guardian" parent="." instance=ExtResource("10_gycjm")]
 position = Vector2(1153, 959)
+
+[node name="Portal" parent="." instance=ExtResource("4_niitk")]
+position = Vector2(1865.0001, 532)
+proxima_cena = "uid://d26bjf537uopw"

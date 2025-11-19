@@ -17,6 +17,7 @@ var completed_levels: Array[String] = []  # Armazena os nomes das fases completa
 var current_xp: int = 0
 var xp_to_next_level: int = 10 # O jogador começa precisando de 10 XP
 var current_level: int = 1
+var player_max_health_run: int = 0
 var run_xp: int = 0 # Acumulador de XP ganho (para salvar no final)
 
 
@@ -37,8 +38,6 @@ signal player_leveled_up(new_level)
 func _ready() -> void:
 	call_deferred("_init_after_ready")
 	
-	# --- MUDANÇA IMPORTANTE ---
-	# Inicializa os stats da run quando o jogo começa
 	reset_run_stats()
 
 
@@ -120,7 +119,7 @@ func _mark_level_completed(level_name: String) -> void:
 	permanent_save_xp()
 		
 	# 2. Reseta os stats da run de volta ao estado (agora salvo)
-	reset_run_stats()
+	#reset_run_stats()
 	
 
 # --- FUNÇÃO ATUALIZADA ---
@@ -160,7 +159,7 @@ func reset_run_stats() -> void:
 	
 	completed_levels.clear() 
 	player_health_run = -1
-	
+	player_max_health_run = 0 
 	run_current_xp = current_xp
 	run_xp_to_next = xp_to_next_level
 	run_level = current_level

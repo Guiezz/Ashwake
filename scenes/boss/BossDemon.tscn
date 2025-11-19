@@ -274,15 +274,16 @@ animations = [{
 size = Vector2(117, 129)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_t8eyq"]
-radius = 471.3067
+radius = 1558.0629
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rxuq3"]
-radius = 238.0084
+radius = 420.3237
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_651t1"]
 size = Vector2(115, 99)
 
 [node name="BossDemon" type="CharacterBody2D"]
+position = Vector2(2, 0)
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_t8eyq")
@@ -297,14 +298,12 @@ position = Vector2(-4.5, 54.5)
 shape = SubResource("RectangleShape2D_uclp3")
 
 [node name="DetectionRange" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource("CircleShape2D_t8eyq")
 debug_color = Color(0.87361354, 0.25862187, 0.58955, 0.41960785)
 
 [node name="AttackRange" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource("CircleShape2D_rxuq3")

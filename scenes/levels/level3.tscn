@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://d26bjf537uopw"]
+[gd_scene load_steps=17 format=4 uid="uid://d26bjf537uopw"]
 
 [ext_resource type="Script" uid="uid://cvbcbhk48fsgi" path="res://scripts/level_3.gd" id="1_7eb4w"]
 [ext_resource type="Texture2D" uid="uid://cbpfic6cftgkv" path="res://assets/sprites/oak_woods_v1.0/oak_woods_tileset.png" id="2_hadiw"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://5vrb8gqcb1bt" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_2.png" id="6_522sc"]
 [ext_resource type="Texture2D" uid="uid://dskyybo4ei4md" path="res://assets/sprites/oak_woods_v1.0/background/background_layer_3.png" id="7_a82vw"]
 [ext_resource type="PackedScene" uid="uid://cyyx2ujtv1r3c" path="res://scenes/boss/BossDemon.tscn" id="7_f7rt6"]
+[ext_resource type="PackedScene" uid="uid://c8hkjkrb5kmdy" path="res://scenes/boss/boss_ui.tscn" id="8_8w0pe"]
 [ext_resource type="PackedScene" uid="uid://dtjporv7xvfnn" path="res://scenes/player/player.tscn" id="8_t14x3"]
 
 [sub_resource type="TileSet" id="TileSet_1seuy"]
@@ -928,14 +929,14 @@ scale = Vector2(1.1291667, 1.1291667)
 position = Vector2(145, 663)
 
 [node name="WaveTimer" type="Timer" parent="."]
+wait_time = 7.5
 
 [node name="SpawnPoints" type="Node2D" parent="."]
 
 [node name="Marker2D" type="Marker2D" parent="SpawnPoints"]
 position = Vector2(1027, 919)
 
-[node name="Marker2D2" type="Marker2D" parent="SpawnPoints"]
-position = Vector2(705, 913)
-
 [node name="BossDemon" parent="." instance=ExtResource("7_f7rt6")]
 position = Vector2(1811, 816)
+
+[node name="BossUI" parent="." instance=ExtResource("8_8w0pe")]
