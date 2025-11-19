@@ -929,7 +929,7 @@ scale = Vector2(1.1291667, 1.1291667)
 position = Vector2(145, 663)
 
 [node name="WaveTimer" type="Timer" parent="."]
-wait_time = 7.5
+wait_time = 10.0
 
 [node name="SpawnPoints" type="Node2D" parent="."]
 

@@ -28,6 +28,7 @@ var run_xp_to_next: int = 0
 var run_level: int = 0
 
 var player_health_run: int = -1 # Começa -1 para indicar que não foi definida
+var player_damage_run: int = 0
 
 
 # --- SINAL DE LEVEL UP ---
@@ -160,6 +161,8 @@ func reset_run_stats() -> void:
 	completed_levels.clear() 
 	player_health_run = -1
 	player_max_health_run = 0 
+	player_damage_run = 0
+	
 	run_current_xp = current_xp
 	run_xp_to_next = xp_to_next_level
 	run_level = current_level

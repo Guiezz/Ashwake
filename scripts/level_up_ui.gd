@@ -123,7 +123,7 @@ func _apply_upgrade(option: Dictionary):
 				print("Nova velocidade: ", player.velocidade)
 		
 		"damage":
-			# Se você tiver uma variável de dano no player, descomente abaixo:
-			# if "dano_ataque" in player:
-			# 	player.dano_ataque += option["value"]
-			print("Upgrade de dano selecionado (implementar lógica se necessário)")
+			if player.has_method("aumentar_dano"):
+				player.aumentar_dano(option["value"])
+			else:
+				print("ERRO: Função aumentar_dano não encontrada no Player!")

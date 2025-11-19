@@ -15,6 +15,7 @@ var esta_morto := false
 @export var gravidade := 1200.0
 @export var desaceleracao := 1000.0
 @export var gravidade_ataque_aereo_mult := 0.8
+@export var dano_ataque: int = 1
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
@@ -64,6 +65,11 @@ func _ready() -> void:
 	else:
 		# Se for a primeira vez (valor 0), usa o padrão do Inspector e salva
 		Singleton.player_max_health_run = vida_maxima
+	
+	if Singleton.player_damage_run > 0:
+		dano_ataque = Singleton.player_damage_run
+	else:
+		Singleton.player_damage_run = dano_ataque # Salva o padrão (1)
 
 	# --- LÓGICA DE CARREGAR VIDA ATUAL (Já existia, mas ajustada) ---
 	if Singleton.player_health_run > 0:
@@ -379,8 +385,9 @@ func _on_combo_window_timer_timeout():
 	
 	
 func _on_hitbox_body_entered(body: Node2D) -> void:
+	# Agora passamos o 'dano_ataque' para o inimigo!
 	if body.has_method("ser_atingido"):
-		body.ser_atingido()
+		body.ser_atingido(dano_ataque)
 	
 func _on_animacao_animation_finished() -> void:
 	if animacao.animation == "wallSick":
@@ -503,3 +510,10 @@ func aumentar_vida_maxima(quantidade: int) -> void:
 	
 	health_changed.emit(vida_atual, vida_maxima)
 	print("Vida Máxima Aumentada e SALVA! Novo Max: ", vida_maxima)
+
+# Adicione junto com as funções curar() e aumentar_vida_maxima()
+
+func aumentar_dano(quantidade: int) -> void:
+	dano_ataque += quantidade
+	Singleton.player_damage_run = dano_ataque # Salva na memória global
+	print("FORÇA BRUTA! Novo Dano: ", dano_ataque)
