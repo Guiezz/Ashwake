@@ -17,7 +17,7 @@ func _ready() -> void:
 	labelDoorB.visible = false  
 
 	# PortaA logic
-	if "level1" in singleton.completed_levels:
+	if "tutorial" in singleton.completed_levels:
 		#colorA.color = Color.GREEN   # Level completed → green
 		collisionA.disabled = true   # Disable collision so player can't enter
 	else:
@@ -25,7 +25,7 @@ func _ready() -> void:
 		collisionA.disabled = false
 
 	# PortaB logic
-	if "level2" in singleton.completed_levels:
+	if "tutorial" in singleton.completed_levels:
 		#colorB.color = Color.GREEN
 		collisionB.disabled = true
 	else:
@@ -62,8 +62,8 @@ func _process(delta: float) -> void:
 
 
 func change_scene_to_porta_a():
-	get_tree().change_scene_to_file("res://scenes/levels/level1.tscn")
+	get_tree().change_scene_to_file("res://scenes/levels/tutorial.tscn")
 
 
 func change_scene_to_porta_b():
-	get_tree().change_scene_to_file("res://scenes/levels/level2.tscn")
+	get_tree().change_scene_to_file("res://scenes/levels/tutorial.tscn")
