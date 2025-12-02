@@ -390,7 +390,7 @@ scale = Vector2(1.25, 1.25)
 
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -4
-position = Vector2(899, 507.04)
+position = Vector2(898.99994, 507.04)
 scale = Vector2(1.1291667, 1.1291667)
 texture = ExtResource("1_yxilm")
 

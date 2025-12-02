@@ -33,7 +33,8 @@ func verificar_visibilidade_inimigos():
 		enemy_label.text = ""
 	else:
 		# Se for uma fase normal, mostra o label e pega o valor real
-		enemy_label.visible = true
+		enemy_label.visible = false
+		enemy_label.text = ""
 		atualizar_inimigos(Singleton.enemy_count.size())
 
 func atualizar_vida(vida_atual: int, vida_maxima: int):
@@ -51,5 +52,5 @@ func atualizar_inimigos(quantidade: int):
 		enemy_label.visible = false
 		return
 		
-	enemy_label.visible = true
-	enemy_label.text = "Inimigos Restantes: %d" % quantidade
+	enemy_label.visible = false
+	enemy_label.text = ""
