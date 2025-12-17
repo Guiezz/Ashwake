@@ -145,7 +145,7 @@ func _on_detection_range_body_exited(body: Node2D) -> void:
 func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		if body.has_method("tomar_dano"):
-			body.tomar_dano(1)
+			body.tomar_dano(1, self)
 
 # --- DANO ---
 # --- DANO CORRIGIDO ---

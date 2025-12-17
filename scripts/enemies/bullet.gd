@@ -65,7 +65,7 @@ func _on_body_entered(body: Node2D) -> void:
 		# Se acertar o Player
 		if body.is_in_group("player"):
 			if body.has_method("tomar_dano"):
-				body.tomar_dano(1)
+				body.tomar_dano(1, self)
 			queue_free()
 			
 		# Se acertar parede (qualquer coisa que não seja o próprio inimigo que atirou)

@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-signal health_changed(nova_vida, vida_maxima)
+signal health_changed(nova_vida, vida_maxima, amount)
 
 # --- VARIÁVEIS DE VIDA E DANO ---
 @export var vida_maxima: int = 5
@@ -16,6 +16,7 @@ var esta_morto := false
 @export var desaceleracao := 1000.0
 @export var gravidade_ataque_aereo_mult := 0.8
 @export var dano_ataque: int = 1
+@export var knockback_force: int = 200
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
@@ -77,7 +78,7 @@ func _ready() -> void:
 	else:
 		vida_atual = vida_maxima
 	
-	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima)
+	call_deferred("emit_signal", "health_changed", vida_atual, vida_maxima, 0)
 
 
 # --- NOVA FUNÇÃO DE ATAQUE (Refatorada) ---
@@ -244,24 +245,29 @@ func _physics_process(delta: float) -> void:
 # --- FUNÇÕES DE DANO E VIDA ---
 # ==================================================
 
-func tomar_dano(dano: int) -> void:
+func tomar_dano(dano: int, damage_source: Node2D = null) -> void:
 	if esta_invencivel or esta_morto: 
 		return
 
 	vida_atual -= dano
 	
+	if damage_source:
+		var knockback_direction = (global_position - damage_source.global_position).normalized()
+		velocity = knockback_direction * knockback_force
+		
 	Singleton.player_health_run = vida_atual
 	
-	health_changed.emit(vida_atual, vida_maxima)
+	health_changed.emit(vida_atual, vida_maxima, -dano)
 	print("Jogador atingido! Vida restante: ", vida_atual)
 	
 	esta_invencivel = true
 	invencibilidade_timer.start() 
 	
-	animacao.modulate = Color.RED
-	await get_tree().create_timer(0.1).timeout
-	if animacao:
-		animacao.modulate = Color.WHITE
+	var tween = get_tree().create_tween()
+	tween.tween_property(animacao, "modulate", Color.RED, 0.1)
+	tween.tween_property(animacao, "modulate", Color.WHITE, 0.1)
+	tween.tween_property(animacao, "modulate", Color.RED, 0.1)
+	tween.tween_property(animacao, "modulate", Color.WHITE, 0.1)
 
 	if vida_atual <= 0:
 		morrer()
@@ -294,7 +300,7 @@ func _on_invencibilidade_timer_timeout():
 
 func _on_hurtbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("enemy"):
-		tomar_dano(1) 
+		tomar_dano(1, body)
 
 
 # ==================================================
@@ -491,7 +497,7 @@ func curar(quantidade: int) -> void:
 		
 	# Atualiza o Singleton e a UI
 	Singleton.player_health_run = vida_atual
-	health_changed.emit(vida_atual, vida_maxima)
+	health_changed.emit(vida_atual, vida_maxima, quantidade)
 	
 	print("Player curado! Vida: ", vida_atual)
 	
@@ -508,7 +514,7 @@ func aumentar_vida_maxima(quantidade: int) -> void:
 	Singleton.player_health_run = vida_atual      # Salva a vida atual nova
 	Singleton.player_max_health_run = vida_maxima # <--- O SEGREDO ESTÁ AQUI!
 	
-	health_changed.emit(vida_atual, vida_maxima)
+	health_changed.emit(vida_atual, vida_maxima, quantidade)
 	print("Vida Máxima Aumentada e SALVA! Novo Max: ", vida_maxima)
 
 # Adicione junto com as funções curar() e aumentar_vida_maxima()
