@@ -588,7 +588,7 @@ texture = ExtResource("2_m6sn8")
 sources/0 = SubResource("TileSetAtlasSource_fatww")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fatww"]
-bg_color = Color(1.0781288e-05, 0.6582569, 0.8536954, 1)
+bg_color = Color(0.8156863, 0.6784314, 0.15294118, 1)
 corner_detail = 1
 
 [node name="player_ui" type="CanvasLayer"]

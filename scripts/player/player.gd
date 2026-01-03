@@ -16,7 +16,7 @@ var esta_morto := false
 @export var desaceleracao := 1000.0
 @export var gravidade_ataque_aereo_mult := 0.8
 @export var dano_ataque: int = 1
-@export var knockback_force: int = 200
+@export var knockback_force: int = 650
 
 # --- WALL JUMP / SLIDE ---
 @export var forca_pulo_parede := Vector2(300, -400)
