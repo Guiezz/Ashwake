@@ -157,7 +157,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_air02",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -351,7 +351,7 @@ vida_maxima = 6
 position = Vector2(67.58362, 39.15625)
 scale = Vector2(2.7258444, 2.4780405)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"run"
+animation = &"attack_air02"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(67, 46)
