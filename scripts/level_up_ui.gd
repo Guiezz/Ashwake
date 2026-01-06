@@ -42,7 +42,7 @@ func _ready():
 # ------------------------
 
 func _on_player_leveled_up(new_level: int):
-	get_tree().paused = true
+	Singleton.request_pause(self)
 	current_choices = _get_random_options(3)
 
 	_update_button_visual(option_button_1, current_choices[0])
@@ -70,7 +70,7 @@ func _on_button_pressed(index: int):
 	_apply_upgrade(selected_option)
 
 	visible = false
-	get_tree().paused = false
+	Singleton.release_pause(self)
 
 
 # ------------------------

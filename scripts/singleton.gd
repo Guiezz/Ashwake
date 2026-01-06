@@ -36,6 +36,28 @@ var player_damage_run: int = 0
 signal player_leveled_up(new_level)
 
 
+# --- Pause State Management ---
+var _pause_requesters: Array = []
+
+
+func request_pause(requester: Object) -> void:
+	if not requester in _pause_requesters:
+		_pause_requesters.append(requester)
+		if not get_tree().paused:
+			get_tree().paused = true
+
+
+func release_pause(requester: Object) -> void:
+	_pause_requesters.erase(requester)
+	if _pause_requesters.is_empty():
+		if get_tree().paused:
+			get_tree().paused = false
+
+
+func is_paused() -> bool:
+	return get_tree().paused
+
+
 func _ready() -> void:
 	call_deferred("_init_after_ready")
 	
