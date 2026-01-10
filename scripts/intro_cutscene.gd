@@ -80,4 +80,4 @@ func preparar_proximo():
 
 func iniciar_jogo():
 	# Troque pelo caminho correto do seu jogo
-	get_tree().change_scene_to_file("res://scenes/levels/level3.tscn")
+	get_tree().change_scene_to_file("res://scenes/home.tscn")

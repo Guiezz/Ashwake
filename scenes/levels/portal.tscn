@@ -7,7 +7,7 @@
 size = Vector2(26, 59)
 
 [node name="Portal" type="Area2D"]
-scale = Vector2(1.5, 1.5)
+scale = Vector2(2, 2)
 script = ExtResource("1_or51j")
 proxima_cena = "uid://bremupbl61my8"
 
