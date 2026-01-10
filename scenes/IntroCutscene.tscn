@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjyiwlkflxevf"]
+
+[ext_resource type="Script" uid="uid://davmhfsamixda" path="res://scripts/intro_cutscene.gd" id="1_872o4"]
+[ext_resource type="Texture2D" uid="uid://kmfdb11hn8tm" path="res://assets/backgrounds/intro_1.jpg" id="2_nuwxb"]
+[ext_resource type="Texture2D" uid="uid://btcaw8ebgjqs6" path="res://assets/backgrounds/intro_2.jpg" id="3_0xuf1"]
+[ext_resource type="Texture2D" uid="uid://cnwv4plbhvo6g" path="res://assets/backgrounds/intro_3.jpg" id="4_du6q1"]
+
+[node name="IntroCutscene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_872o4")
+imagem_1 = ExtResource("2_nuwxb")
+imagem_2 = ExtResource("3_0xuf1")
+imagem_3 = ExtResource("4_du6q1")
+
+[node name="Background" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -5.0
+offset_top = -90.0
+offset_right = 2060.0
+offset_bottom = 1195.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="StoryText" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 340.0
+offset_top = 892.0
+offset_right = 1613.0
+offset_bottom = 1020.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+autowrap_mode = 2

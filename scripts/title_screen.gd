@@ -17,7 +17,7 @@ func _ready():
 	btn_start.grab_focus()
 
 func _on_btn_start_pressed():
-	get_tree().change_scene_to_file("res://scenes/levels/tutorial.tscn")
+	get_tree().change_scene_to_file("res://scenes/IntroCutscene.tscn")
 
 func _on_btn_controls_pressed():
 	controls_panel.visible = true
