@@ -1354,7 +1354,7 @@ position = Vector2(1284.205, 544.705)
 position = Vector2(1268, 930)
 
 [node name="Soul2" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
-position = Vector2(198.205, 712)
+position = Vector2(677, 689)
 
 [node name="Parallax2D" type="Parallax2D" parent="."]
 scroll_scale = Vector2(5, 5)
@@ -1397,7 +1397,7 @@ position = Vector2(962, 569)
 scale = Vector2(1.1291667, 1.1291667)
 
 [node name="Player" parent="." instance=ExtResource("1_ootpb")]
-position = Vector2(469, 648)
+position = Vector2(12, 662)
 
 [node name="Portal" parent="." instance=ExtResource("8_8a7m2")]
-position = Vector2(1866, 512)
+position = Vector2(1867, 493)

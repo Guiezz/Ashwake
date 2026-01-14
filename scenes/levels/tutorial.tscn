@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://jvl5ady1ligk"]
+[gd_scene load_steps=20 format=4 uid="uid://jvl5ady1ligk"]
 
 [ext_resource type="Script" uid="uid://devtdy1rcppv2" path="res://scenes/levels/tutorial.gd" id="1_3e81p"]
 [ext_resource type="Texture2D" uid="uid://cbpfic6cftgkv" path="res://assets/sprites/oak_woods_v1.0/oak_woods_tileset.png" id="2_g7bfq"]
@@ -846,6 +846,11 @@ texture = ExtResource("2_g7bfq")
 [sub_resource type="TileSet" id="TileSet_8a7m2"]
 sources/0 = SubResource("TileSetAtlasSource_2r1tl")
 
+[sub_resource type="LabelSettings" id="LabelSettings_3e81p"]
+font_size = 46
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
 [node name="tutorial" type="Node2D"]
 script = ExtResource("1_3e81p")
 
@@ -970,3 +975,18 @@ scale = Vector2(1.1291667, 1.1291667)
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(962, 569)
 scale = Vector2(1.1291667, 1.1291667)
+
+[node name="Interface" type="CanvasLayer" parent="."]
+
+[node name="LabelInstrucao" type="Label" parent="Interface"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -88.0
+offset_top = 166.0
+offset_right = 88.0
+offset_bottom = 211.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Prepare-se!"
+label_settings = SubResource("LabelSettings_3e81p")
