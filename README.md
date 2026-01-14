@@ -23,7 +23,6 @@ Este projeto conta com mecânicas avançadas polidas para criar uma experiência
 
 ### 🗡️ Combate Dinâmico
 - **Combo System:** Encadeie ataques leves e pesados com animações fluidas.
-- **Arsenal Versátil:** Alterne entre combate corpo-a-corpo e à distância (Espada, Arco e Magia).
 - **Feedback Visual:** Sistema de *Damage Numbers* e efeitos de sangue para cada golpe conectado.
 - **Hit Reactions:** Inimigos sentem o impacto dos seus golpes.
 
