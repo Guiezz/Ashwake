@@ -1437,5 +1437,5 @@ position = Vector2(957, 567)
 position = Vector2(1153, 959)
 
 [node name="Portal" parent="." instance=ExtResource("4_niitk")]
-position = Vector2(1865.0001, 532)
+position = Vector2(1862, 515)
 proxima_cena = "uid://d26bjf537uopw"
