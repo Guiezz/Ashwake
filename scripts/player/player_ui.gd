@@ -1,10 +1,12 @@
 extends CanvasLayer
 
+const DamageNumberScene = preload("res://scenes/ui/damage_number.tscn")
+
 # --- REFERÊNCIAS DA UI (Baseado na estrutura da sua cena) ---
 @onready var health_bar = $MarginContainer/VBoxContainer/HealthContainer/HealthBar
 @onready var health_text = $MarginContainer/VBoxContainer/HealthContainer/HealthBar/HealthText
 @onready var xp_bar = $MarginContainer/VBoxContainer/XPContainer/XPBar
-@onready var xp_text = $MarginContainer/VBoxContainer/XPContainer/XPBar/XPText
+@onready var xp_text =$MarginContainer/VBoxContainer/XPContainer/XPBar/XPText
 @onready var enemy_label = $MarginContainer/VBoxContainer/EnemyCountLabel
 
 # Referência ao Player (será buscado no _ready)
@@ -17,7 +19,7 @@ func _ready():
 	player = get_tree().get_first_node_in_group("player")
 	if player:
 		player.health_changed.connect(atualizar_vida)
-		atualizar_vida(player.vida_atual, player.vida_maxima)
+		atualizar_vida(player.vida_atual, player.vida_maxima, 0)
 	
 	# Inicializa a UI com os valores atuais do Singleton
 	atualizar_xp(Singleton.run_current_xp, Singleton.run_xp_to_next)
@@ -33,13 +35,19 @@ func verificar_visibilidade_inimigos():
 		enemy_label.text = ""
 	else:
 		# Se for uma fase normal, mostra o label e pega o valor real
-		enemy_label.visible = true
+		enemy_label.visible = false
+		enemy_label.text = ""
 		atualizar_inimigos(Singleton.enemy_count.size())
 
-func atualizar_vida(vida_atual: int, vida_maxima: int):
+func atualizar_vida(vida_atual: int, vida_maxima: int, amount: int):
 	health_bar.max_value = vida_maxima
 	health_bar.value = vida_atual
 	health_text.text = "%d / %d" % [vida_atual, vida_maxima]
+	
+	if amount != 0:
+		var damage_number_instance = DamageNumberScene.instantiate()
+		add_child(damage_number_instance)
+		damage_number_instance.start(amount, player.global_position - Vector2(0, 50))
 
 func atualizar_xp(xp_atual: int, xp_proximo: int):
 	xp_bar.max_value = xp_proximo
@@ -51,5 +59,5 @@ func atualizar_inimigos(quantidade: int):
 		enemy_label.visible = false
 		return
 		
-	enemy_label.visible = true
-	enemy_label.text = "Inimigos Restantes: %d" % quantidade
+	enemy_label.visible = false
+	enemy_label.text = ""

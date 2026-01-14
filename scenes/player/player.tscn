@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://dtjporv7xvfnn"]
+[gd_scene load_steps=65 format=3 uid="uid://dtjporv7xvfnn"]
 
 [ext_resource type="Script" uid="uid://cxmuybsajhqdw" path="res://scripts/player/player.gd" id="1_dovo2"]
 [ext_resource type="Texture2D" uid="uid://tv3a76203m5m" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-attack2-00.png" id="2_cnsyf"]
@@ -58,6 +58,7 @@
 [ext_resource type="Texture2D" uid="uid://d1bvwi34ausgy" path="res://assets/sprites/Player/Adventurer-1.5/Individual Sprites/adventurer-wall-slide-01.png" id="48_7nf13"]
 [ext_resource type="PackedScene" uid="uid://ca78hj6p817ud" path="res://scenes/levels/level_up_ui.tscn" id="57_uygh0"]
 [ext_resource type="PackedScene" uid="uid://bmuq4rcrr835e" path="res://scenes/player/player_ui.tscn" id="58_t1aof"]
+[ext_resource type="PackedScene" uid="uid://dc0hjh4cpbk38" path="res://scenes/PauseMenu.tscn" id="59_w8qe1"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4sw5w"]
 animations = [{
@@ -156,7 +157,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"attack_air02",
-"speed": 5.0
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -350,7 +351,7 @@ vida_maxima = 6
 position = Vector2(67.58362, 39.15625)
 scale = Vector2(2.7258444, 2.4780405)
 sprite_frames = SubResource("SpriteFrames_4sw5w")
-animation = &"run"
+animation = &"attack_air02"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(67, 46)
@@ -403,6 +404,8 @@ one_shot = true
 visible = false
 
 [node name="player_ui" parent="." instance=ExtResource("58_t1aof")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("59_w8qe1")]
 
 [connection signal="animation_finished" from="Animacao" to="." method="_on_animacao_animation_finished"]
 [connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]

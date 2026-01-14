@@ -387,10 +387,11 @@ sources/0 = SubResource("TileSetAtlasSource_reixx")
 [node name="Player" parent="." instance=ExtResource("1_u4wd2")]
 position = Vector2(968.08, 893.6)
 scale = Vector2(1.25, 1.25)
+knockback_force = 2000
 
 [node name="BG" type="Sprite2D" parent="."]
 z_index = -4
-position = Vector2(899, 507.04)
+position = Vector2(898.99994, 507.04)
 scale = Vector2(1.1291667, 1.1291667)
 texture = ExtResource("1_yxilm")
 

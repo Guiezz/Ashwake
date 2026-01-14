@@ -200,7 +200,7 @@ func _on_detection_exited(body: Node2D) -> void:
 func _on_melee_hitbox_entered(body: Node2D) -> void:
 	if body.is_in_group("player") and body.has_method("tomar_dano"):
 		print("DANO APLICADO NO PLAYER")
-		body.tomar_dano(1)
+		body.tomar_dano(1, self)
 
 func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:
 	if current_state == State.DEATH: return

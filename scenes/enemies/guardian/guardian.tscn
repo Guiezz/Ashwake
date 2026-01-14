@@ -373,6 +373,7 @@ size = Vector2(107, 123)
 radius = 463.31198
 
 [node name="Guardian" type="CharacterBody2D"]
+scale = Vector2(1.5, 1.5)
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_ewr03")

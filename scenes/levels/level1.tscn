@@ -1351,12 +1351,15 @@ tile_set = SubResource("TileSet_8a7m2")
 position = Vector2(1284.205, 544.705)
 
 [node name="Golem" parent="." groups=["enemies"] instance=ExtResource("2_ootpb")]
-position = Vector2(1268, 956)
+position = Vector2(1268, 930)
 
 [node name="Soul2" parent="." groups=["enemies"] instance=ExtResource("1_dopym")]
 position = Vector2(198.205, 712)
 
-[node name="BG" type="Sprite2D" parent="."]
+[node name="Parallax2D" type="Parallax2D" parent="."]
+scroll_scale = Vector2(5, 5)
+
+[node name="BG" type="Sprite2D" parent="Parallax2D"]
 z_index = -4
 position = Vector2(958.99994, 548)
 scale = Vector2(1.1291667, 1.1291667)

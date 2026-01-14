@@ -178,7 +178,7 @@ func _on_attack_hitbox_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		print("TOMANDO DANO")
 		if body.has_method("tomar_dano"):
-			body.tomar_dano(1)
+			body.tomar_dano(1, self)
 
 # --- DANO E MORTE ---
 func ser_atingido(dano: int = 1, origem: Vector2 = Vector2.ZERO) -> void:

@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3 uid="uid://bcuy6u4e6cvrh"]
+
+[ext_resource type="Script" uid="uid://cocksxedr6fjf" path="res://scripts/title_screen.gd" id="1_qyuap"]
+[ext_resource type="Texture2D" uid="uid://etefwgvow0gv" path="res://assets/backgrounds/Gemini_Generated_Image_gnene2gnene2gnen 1.png" id="2_ch40n"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_qyuap")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+texture = ExtResource("2_ch40n")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 817.0
+offset_top = 569.0
+offset_right = 1147.0
+offset_bottom = 722.0
+
+[node name="BtnStart" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Iniciar Jogo"
+
+[node name="BtnControls" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Controles"
+
+[node name="BtnExit" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Sair"
+
+[node name="ControlsPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 5.0
+offset_top = 3.0
+offset_right = 1917.0
+offset_bottom = 1079.0
+
+[node name="Label" type="Label" parent="ControlsPanel"]
+layout_mode = 0
+offset_left = 744.0
+offset_top = 389.0
+offset_right = 1132.0
+offset_bottom = 620.0
+text = "Analogico | WASD: Mover\"
+
+X | Espaço: Pular
+
+ □| Botão esq: Atacar
+
+R1 | Shift: Dash
+
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BtnCloseControls" type="Button" parent="ControlsPanel"]
+layout_mode = 0
+offset_left = 887.0
+offset_top = 628.0
+offset_right = 972.0
+offset_bottom = 674.0
+text = "Fechar"
+
+[connection signal="pressed" from="VBoxContainer/BtnStart" to="." method="_on_btn_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/BtnControls" to="." method="_on_btn_controls_pressed"]
+[connection signal="pressed" from="VBoxContainer/BtnExit" to="." method="_on_btn_exit_pressed"]
+[connection signal="pressed" from="ControlsPanel/BtnCloseControls" to="." method="_on_btn_close_controls_pressed"]

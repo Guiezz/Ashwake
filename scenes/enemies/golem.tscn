@@ -297,6 +297,7 @@ size = Vector2(63, 88)
 radius = 375.00534
 
 [node name="Golem" type="CharacterBody2D" groups=["enemy"]]
+scale = Vector2(1.35, 1.35)
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_txad0")
