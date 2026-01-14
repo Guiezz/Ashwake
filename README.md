@@ -28,7 +28,7 @@ Este projeto conta com mecânicas avançadas polidas para criar uma experiência
 
 ### 🏃 Movimentação Avançada (Parkour)
 - **Wall Mechanics:** Wall Slide e Wall Run para alcançar áreas verticais.
-- **Evasão:** Deslize (Slide) por baixo de obstáculos ou role (Somersault) para escapar de ataques mortais.
+- **Evasão:** Deslize (Slide) por baixo de obstáculos ou para escapar de ataques mortais.
 - **Interação:** Subida de escadas e agarrar em bordas (Ledge Grab).
 
 ### 👹 Bestiário & IA
@@ -37,7 +37,7 @@ Enfrente uma variedade de horrores, cada um com comportamentos únicos:
 - **Old Guardian:** Agilidade e ataques surpresa.
 - **Skeleton Lighter:** Inimigos clássicos, mas letais em grupo.
 - **Souls:** Entidades voadoras que exigem precisão.
-- **BOSS FIGHT:** Enfrente o terrível **Demon Boss**, com múltiplas fases, ataques de *Cleave* e *Chase*.
+- **BOSS FIGHT:** Enfrente o terrível **Deimos**, com múltiplas fases, ataques de *Cleave* e *Chase*.
 
 ### 🗺️ Level Design
 - **Múltiplos Níveis:** Tutorial, Oak Woods e Cavernas profundas.
